@@ -29,7 +29,8 @@ def validate(day):
     for key in ("lead", "window", "note"):
         require(key not in day or isinstance(day[key], str), key + " 须为文本")
     entries = day.get("entries")
-    require(isinstance(entries, list) and entries, "entries 须至少包含一条新闻")
+    require(isinstance(entries, list), "entries 须为数组")
+    require(entries or day.get("lead") == "今天平静", "无新闻时请明确标注今天平静")
     for number, entry in enumerate(entries, 1):
         label = f"第 {number} 条"
         require(isinstance(entry, dict) and nonempty(entry.get("title")), label + "缺标题")

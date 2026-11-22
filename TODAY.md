@@ -1,15 +1,16 @@
-# 用 Today 发布 Noema 日报
+# Today 每日发布
 
-在 Today 的连接器中启用可写的 GitHub 连接。如果需要添加自定义 MCP，服务地址为 `https://api.githubcopilot.com/mcp/`。按连接器提供的授权方式登录。若使用细粒度令牌，选择仓库 `wiss-pike/noema`，授予 Contents 读写权限，仅在连接器的鉴权字段填写。
+Today 已有的「每日 AI 与时事热点简报」在北京时间 08:00 运行。在 Today 的「任务 → 定时任务」中可以查看执行时间、发布指令及运行记录。
 
-已能运行本机 GitHub CLI 的 Today 也可以使用仓库内的 `publish_daily.py`。手机端定时运行优先使用云端可用的 GitHub 连接。
+## 发布流程
 
-## 交给 Today 的任务
+1. 根据原任务的来源和选题要求写好手机简报，取其中可公开的内容写入 `_data/editions/YYYY-MM-DD.json`。格式可以参考同目录下的历史稿件。
+2. 在仓库工作区运行 `python3 publish_daily.py _data/editions/YYYY-MM-DD.json --check`。每条新闻需附可查阅的 HTTPS 来源。当期确认没有重要进展时，可以将 `lead` 写成「今天平静」，`entries` 写成空数组。
+3. 使用云端专用 SSH 部署密钥，将该日文件提交到 `wiss-pike/noema` 的 `main` 分支。内容相同则跳过。与他人同时修改时，先重新读取远端再核对，避免覆盖已有修订。
+4. GitHub Pages 构建完成后，核对公开汇总 `data/daily.json` 中的日期和正文，再在手机简报中附当天的阅读链接。
 
-> 每天北京时间 08:00，整理过去 24 小时与 AI 研究、产品及重要科技事件有关的公开信息，编写 Noema 中文日报。每条写清发生的事实、日期和可直接打开的原始来源。只使用公开资料。缺乏可靠来源时跳过该条，当天无可核实条目时向我说明并跳过发布。
->
-> 向 GitHub 仓库 wiss-pike/noema 的 main 分支提交单个文件 _data/editions/YYYY-MM-DD.json，日期按北京时间。格式参见 _data/editions/2026-11-22.json。每期写 date、lead、entries；每条写 title、category、points（字符串数组）、sources（含 label 和 HTTPS url 的对象数组）。全部使用纯文本。提交前先检查当日文件，已发布则跳过。核对新闻与来源后提交。等待 Pages 构建，打开 https://wiss-pike.github.io/noema/daily.html?d=YYYY-MM-DD 确认新标题可见，再把链接发给我。若提交或发布失败，报告具体原因。
+## 管理授权
 
-可用一份既有日报校验连接器的读取权限。首次测试写入时用真实、已核实的当期材料，避免测试内容进入公开归档。
+GitHub 仓库 Settings → Deploy keys 中的 `Today Cloud - Noema daily editions` 对此仓库拥有写权限。删除该项会立即撤销此密钥的后续 GitHub 访问。私钥保存在 Today 云端，公开仓库不保存凭据。
 
-[GitHub 官方 MCP 服务](https://github.com/github/github-mcp-server) · [Today](https://today.ai/)
+[公开日报](https://wiss-pike.github.io/noema/daily.html) · [部署密钥设置](https://github.com/wiss-pike/noema/settings/keys)
