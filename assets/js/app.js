@@ -432,11 +432,9 @@
     var box = $('load-error');
     if (!box) return;
     box.hidden = false;
-    box.innerHTML = '论文数据没能加载（<code>data/papers.json</code>）。' +
-      '直接双击打开时浏览器会拦截本地数据读取；在站点目录运行 ' +
-      '<code>python3 -m http.server 8000</code> 再访问 ' +
-      '<code>http://localhost:8000</code> 即可，部署到 GitHub Pages 后不受影响。' +
-      (err && err.message ? '<br>' + esc(err.message) : '');
+    box.setAttribute('role', 'alert');
+    box.textContent = '暂时无法读取论文，请刷新页面重试。';
+
   }
 
   function init() {

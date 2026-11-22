@@ -38,10 +38,16 @@ def validate(day):
         require(isinstance(points, list) and points and all(map(nonempty, points)), label + "缺事实要点")
         sources = entry.get("sources")
         require(isinstance(sources, list) and sources, label + "缺来源")
+        has_link = False
         for source in sources:
             require(isinstance(source, dict) and nonempty(source.get("label")), label + "缺来源名称")
-            url = urlsplit(source.get("url") or "")
+            if not source.get("url"):
+                continue
+            require(isinstance(source["url"], str), label + "的链接须为文本")
+            url = urlsplit(source["url"])
             require(url.scheme == "https" and url.hostname, label + "的来源须有 HTTPS 链接")
+            has_link = True
+        require(has_link, label + "至少需要一个可查证的 HTTPS 来源")
     return stamp
 
 

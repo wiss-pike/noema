@@ -186,9 +186,9 @@
   function fail(err) {
     var box = $('load-error');
     box.hidden = false;
-    box.innerHTML = '数据没能加载（<code>data/' + (view === 'daily' ? 'daily' : 'weekly') + '.json</code>）。' +
-      '直接双击打开时浏览器会拦本地读取；在站点目录跑 <code>python3 -m http.server 8000</code> 再看 localhost:8000。' +
-      (err && err.message ? '<br>' + esc(err.message) : '');
+    box.setAttribute('role', 'alert');
+    box.textContent = '暂时无法读取归档，请刷新页面重试。';
+
   }
 
   function start(data) {
