@@ -47,7 +47,7 @@
   function sources(list) {
     if (!list || !list.length) return '';
     return '<p class="sources">' + list.map(function (s) {
-      return s.url
+      return NoemaContent.safeLink(s.url)
         ? '<a class="source-link" href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + '<span class="arrow">↗</span></a>'
         : '<span class="source-link is-plain">' + esc(s.label) + '</span>';
     }).join('') + '</p>';
@@ -228,8 +228,6 @@
     }
   }
 
-  fetch(view === 'daily' ? 'data/daily.json' : 'data/weekly.json', { cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(start)
-    .catch(fail);
+  const request = view === 'daily' ? NoemaContent.daily() : NoemaContent.json('data/weekly.json');
+  request.then(start).catch(fail);
 })();

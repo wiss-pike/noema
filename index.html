@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Noema · 论文精读归档</title>
 <meta name="description" content="Noema（诺埃玛）：每周一篇 AI 核心技术方向的论文精读归档，按月排列，可按方向筛选与搜索。">
-<meta name="theme-color" content="#F6F3EC">
+<meta name="theme-color" content="#f6f5ed">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F6F3EC'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' text-anchor='middle' fill='%23171512'%3EN%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -26,29 +26,31 @@
 
 <main>
 
-  <section class="hero shell">
-    <div class="hero-main">
-      <h1 class="hero-title reveal" style="--d:80ms">Noema</h1>
-      <p class="hero-cn reveal" style="--d:240ms">诺 埃 玛</p>
-      <p class="hero-lede reveal" style="--d:360ms"><span>每周读一篇 AI 核心技术方向的论文，</span><span>把读过的留在档案里。不追热度，只留值得反复翻的那些。</span></p>
+  <section class="cover shell" aria-labelledby="cover-title">
+    <div class="cover-copy">
+      <p class="cover-kicker">诺埃玛 · AI 研究手记</p>
+      <h1 id="cover-title">Noema<span aria-hidden="true">.</span></h1>
+      <p class="cover-description">每周读一篇 AI 核心技术方向的论文，<br>把读过的留在档案里。</p>
+      <a class="archive-jump" href="#archive">浏览论文归档 <span aria-hidden="true">↓</span></a>
     </div>
-
-    <aside class="hero-aside reveal" style="--d:520ms">
-      <p class="aside-label">档案</p>
-      <dl class="stats">
-        <div><dt>已归档</dt><dd><span data-stat="papers">—</span> 篇</dd></div>
-        <div><dt>月份</dt><dd><span data-stat="months">—</span> 个月</dd></div>
-        <div><dt>方向</dt><dd>四类</dd></div>
-      </dl>
-      <p class="aside-note">始于 2026 年 11 月<br>每月更新，数据在 data/papers.json</p>
-    </aside>
-
-    <div class="hero-rule rule-anim" aria-hidden="true"></div>
+    <a class="cover-feature" href="#archive" id="cover-feature">
+      <img src="assets/contours.webp" alt="" width="1300" height="520" fetchpriority="high">
+      <div class="feature-caption">
+        <p class="feature-meta">最新精读 <time id="feature-date"></time></p>
+        <p class="feature-title" id="feature-title">论文归档</p>
+        <span class="feature-arrow" aria-hidden="true">↗</span>
+      </div>
+    </a>
   </section>
+
+  <div class="dispatch shell">
+    <a href="daily.html" id="latest-day"><strong>最新日报</strong><span id="latest-headline">按日期浏览日报</span><i aria-hidden="true">→</i></a>
+    <a href="weekly.html"><strong>周报</strong><span>本周回顾</span><i aria-hidden="true">→</i></a>
+  </div>
 
   <section class="archive shell" id="archive">
     <div class="archive-head">
-      <h2 class="archive-title">归档</h2>
+      <h2 class="archive-title">论文归档</h2>
 
       <div class="tools">
         <div class="filters" id="chips" role="group" aria-label="按方向筛选"></div>
@@ -57,7 +59,7 @@
             <circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
             <path d="M13.2 13.2 17 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
           </svg>
-          <input id="q" type="search" placeholder="标题或作者…" autocomplete="off" aria-label="搜索标题或作者">
+          <input id="q" name="q" type="search" placeholder="标题或作者…" autocomplete="off" aria-label="搜索标题或作者">
         </label>
       </div>
     </div>
@@ -80,6 +82,7 @@
   </div>
 </footer>
 
+<script src="assets/js/content.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

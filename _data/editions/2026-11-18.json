@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-18",
+  "window": "2026-11-18 08:00 — 次日 08:00（北京时间）",
+  "note": "该期原始简报正文未完整保留，条目按当周公开报道重建（见 AI与时事周报_2026-11-16_2026-11-22.pdf 标注）",
+  "entries": [
+    {
+      "title": "OpenAI 发布 GPT-6.2 Astra 与 Sol",
+      "category": "AI",
+      "points": [
+        "专业任务成本仅 Claude Fable 5.2 的 5%。",
+        "当地时间 11-17（北京 11- 18 凌晨），OpenAI 发布两款模型：GPT-6.2 Astra 定位旗舰、面向复杂专业项目，重点提升文档、演示文稿、电子表格、编程、科研与 3D 设计能力；GPT-6.2 Sol 为日常主力，可在相同付费额度内完成更多任务。",
+        "数字上： Agents' Last Exam 上 Astra 较上代高 5.2 分、较 Claude Fable 5.2 高 5.5 分，而成本仅为后者的 5%；内部基准 GDPval v2 高 6.2 个百分点、输出 Token 少 22%；第三方 AA-3D 基准 1318 分。"
+      ],
+      "sources": [
+        {
+          "label": "OpenAI",
+          "url": ""
+        },
+        {
+          "label": "凤凰网科技",
+          "url": "https://view.inews.qq.com/wxn/20261118A"
+        },
+        {
+          "label": "界面新闻",
+          "url": "https://dy.163.com/article/LC0ION540534A4SC.html"
+        }
+      ]
+    },
+    {
+      "title": "开发者称「OpenAI 有史以来最差模型」。",
+      "category": "AI",
+      "points": [
+        "开发者称「OpenAI 有史以来最差模型」。",
+        "与官方跑分形成反差的是社区反馈。",
+        "开发者兼 YouTuber Theo Browne 在 X 上发长文称「6.2 Astra 是 OpenAI 有史以来发布的最差模型」，主要批评可读性差、 解释过于复杂；投资者兼前 HyperWrite AI 首席执行官 Matt Shumer 称这些新模型「基本上无……」——虎嗅的总结是「一个神鬼二象性的模型」。"
+      ],
+      "sources": [
+        {
+          "label": "虎嗅",
+          "url": "https://www.163.com/dy/article/LC289F0K051188EA.html"
+        },
+        {
+          "label": "界面新闻",
+          "url": "https://www.jiemian.com/article/15352537.htm"
+        }
+      ]
+    },
+    {
+      "title": "英伟达 Q3 营收 1158 亿美元、同比 +103%，黄仁勋愿回归被董事会拒绝",
+      "category": "AI",
+      "points": [
+        "英伟达 Q3 营收 1158 亿美元、同比 +103%，黄仁勋愿回归被董事会拒绝。",
+        "11-17 黄仁勋在辞任后首次公开发声，表示愿意重返英伟达担任 CEO，前提是董事会认为符合公司利益；英伟达董事长随后明确表示董事会无意让其复职。",
+        "同日公布的季度营收为 1158 亿美元、同比增长 103%。"
+      ],
+      "sources": [
+        {
+          "label": "新浪财经",
+          "url": "https://finance.sina.com.cn/tech/csj/2026-11-18/doc-inizcmff1196675.shtml"
+        }
+      ]
+    },
+    {
+      "title": "微软发布 MAI Code 2 等自研模型，Perplexity 年化营收达 10 亿美元。…",
+      "category": "AI",
+      "points": [
+        "微软推出 MAI Code 2 等一批自研 MAI 模型；Perplexity 年化营收运行率达到 10 亿美元；OpenAI 宣布与北约、智利建立合作。",
+        "另据路透， SEC 已对英伟达展开调查——调查不代表存在不当行为，许多调查最终未导致执法行动。"
+      ],
+      "sources": [
+        {
+          "label": "AI News Roundup（2026-11-",
+          "url": "https://itstimeai.com.au/blog/ai-news-roundup-18-november-2026"
+        }
+      ]
+    },
+    {
+      "title": "习近平出席 APEC 工商领导人峰会开幕式并发表主旨演讲，《深圳倡议》发布。11",
+      "category": "时事",
+      "points": [
+        "习近平出席 APEC 工商领导人峰会开幕式并发表主旨演讲，《深圳倡议》发布。",
+        "11-18 上午，习近平在深圳前海国际会议中心出席 2026 年亚太经合组织工商领导人峰会开幕式，发表题为《坚定信心，勇毅前行共创亚太光明未来》的主旨演讲，提出促进亚太共同繁荣的中国主张。",
+        "当日《2026 年亚太经合组织工商领导人峰会深圳倡议》对外发布，呼吁深化开放型区域经济、以技术创新驱动包容增长、畅通区域一体化动脉、携手实现共同繁荣——这是 APEC 工商领导人峰会创办 30 年来首次以倡议形式发布成果文件。"
+      ],
+      "sources": [
+        {
+          "label": "新华社",
+          "url": "https://www.news.cn/world/20261119/f74acfe9e98b46ceb0dd6bea19b0c920/c.html"
+        },
+        {
+          "label": "央广网",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "title": "习近平 11-18 会见普京、迎接美国总统、会见韩国总统；八省（市）开展 6G 部省协同试点…",
+      "category": "时事",
+      "points": [
+        "八省（市）将开展 6G 创新发展部省协同试点；前 10 个月深圳对 APEC 其他成员经济体进出口总值居全国内地城市首位、增长超四成。"
+      ],
+      "sources": [
+        {
+          "label": "央视网《新闻联播》20261118",
+          "url": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-11",
+  "window": "2026-11-11 08:00 — 次日 08:00（北京时间）",
+  "entries": [
+    {
+      "title": "Anthropic 启动纳斯达克 IPO 路演",
+      "category": "AI",
+      "points": [
+        "8.25 亿股 A 类股，$70–78/股，最高募资约 644 亿美元 + 260 亿美元私募配售 = 约 904 亿美元；按上限完全稀释估值约 1.4 万亿美元，目标 11-19 挂牌、代码 ANT；长期调整后经营利润率目标 35%+（Q3 为 15%），高盛预计 2030 年营收 6850 亿美元；七位联合创始人拟套现约 17.5 亿美元。",
+        "路演前一天一份文件副本显示 $70–80、8.67 亿股、募资 693 亿美元，公司随后称\"定价细节不准确\"并撤回（彭博：文件来自外部律师）。",
+        "同日推 Claude Sheets、Claude Whiteboards、Claude Data 与升级版连接器，微软盘中跌 3%。"
+      ],
+      "sources": []
+    },
+    {
+      "title": "谷歌 Gemini 4 Carbon 向所有付费开发者与企业开放，Antigra",
+      "category": "AI",
+      "points": [
+        "谷歌 Gemini 4 Carbon 向所有付费开发者与企业开放，Antigravity 预览\"swarm（蜂群）\"多智能体功能；介绍价 $2/$10 每百万 token（约 GPT-6 Astra 的 1/5、Fable 5.2 的 1/4），11 月底介绍期结束后翻倍；AI Ultra 可用，免费/低档未明确；Google 承认多数软件工程场景用 Argon 即可。",
+        "来源 theverge.com/ai-artificial-intelligence/1030787、news.qq.com/rain/a/20261111A038R700（IT之家）"
+      ],
+      "sources": []
+    },
+    {
+      "title": "MiniMax 开源 H3-Image",
+      "category": "时事",
+      "points": [
+        "33.1 亿参数，10–20 秒出 4096×4096（约 16MP）；支持文生图/参考图生成/编辑，最多 16 张参考图；权重已上 Hugging Face；首周 16MP 以上五折。",
+        "来源 minimax.io/blog/minimax-h3-image、awtmt.com/articles/3785667"
+      ],
+      "sources": []
+    },
+    {
+      "title": "OpenAI 上线 Businesses in ChatGPT 测试版（Business H…",
+      "category": "AI",
+      "points": [
+        "企业认领验证商家主页、看提及/点击/搜索词数据、挂官方 AI 智能体做比价对话；先向符合条件的美国电商开放；称 ChatGPT 周活约 12 亿。",
+        "来源 theverge.com/ai-artificial-intelligence/1030552、thestar.com.my（路透）、ithome.com/1/025/206.htm"
+      ],
+      "sources": []
+    },
+    {
+      "title": "美国 10 月 CPI 环比 +0.4%（连续第三个月 ≥0.4%，预期 0.3%，9 月 …",
+      "category": "AI",
+      "points": [
+        "黄仁勋与 Alice Huang 关系促成至少 75 亿美元芯片经中企出货）；伦敦金 -2.58% 至 4032 美元/盎司、银 -3.52%。",
+        "来源 straitstimes.com（路透）、morningstar.com/news/marketwatch/20261110148、m.cnfin.com/gs-lb//zixun/20261111/4493786_1.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "俄美乌三方会谈 11-10 在阿布扎比重启，首日闭门约 4 小时、11 日继续，",
+      "category": "时事",
+      "points": [
+        "俄美乌三方会谈 11-10 在阿布扎比重启，首日闭门约 4 小时、11 日继续，为今年 2 月停摆以来时隔 9 个月首次面对面；泽连斯基称\"富有建设性\"，议题含战俘释放、人道举措、长期安全保障、局势缓和；俄方不接受\"冻结冲突\"；同期互袭未停，乌多地能源设施遭袭、轮流停电。",
+        "来源 english.news.cn/20261111/653135d3a957430a922b4b2d8e33821e/c.html、chinanews.com/gj/2026/11-11/10729881.shtml、thestar.com.my（路透）"
+      ],
+      "sources": []
+    }
+  ]
+}

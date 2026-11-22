@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-14",
+  "window": "2026-11-14 08:00 — 次日 08:00（北京时间）",
+  "entries": [
+    {
+      "title": "周五纳指 100 -2%（约 8000 亿美元）、费半 -5.1%（约 5600",
+      "category": "AI",
+      "points": [
+        "周五纳指 100 -2%（约 8000 亿美元）、费半 -5.1%（约 5600 亿）、CoreWeave -8.8%、Nebius -9%、AMD -10.7%、博通 -5.9%、美光 -5%；媒体称董事会接触 Arm CEO 雷内·哈斯接任（Arm -4.8%）；Nscale 改 IPO 文件预计 9 个月净亏 17 亿美元。",
+        "路透调查：福建 62 亿（H100）、陕西 30 亿（H100/H200）、吉林 22.6 亿（英伟达+国产）等 AI 数据中心项目规划用受管制芯片，总投资超 230 亿元（文件不证明已到货或违规）。",
+        "TechCrunch：Unemployment Labs（Will DePue）11-12 报告称 DeepSeek、月之暗面、MiniMax、蚂蚁 6 个公开权重的模型带 Blackwell 初始化指纹（148 SM / GB200 级），报告自身限定只证明用过、不证明来源。"
+      ],
+      "sources": []
+    },
+    {
+      "title": "OpenAI 11-13 推出 ChatGPT Wallet",
+      "category": "AI",
+      "points": [
+        "与 Amex、Visa、万事达、Chase 合作，替代支付凭证，dots 代理不见真实卡号，每笔需 Face ID/指纹确认，保留卡权益与争议保障；先向美国 18 岁以上 Pro 用户开放；此前今年已关停 Instant Checkout。",
+        "来源 theverge.com/ai-artificial-intelligence/1033425/openai-chatgpt-wallet、bloomberg.com/news/articles/2026-11-13/openai-debuts-new-chatgpt-payment-method-with-card-networks、163.com/dy/article/LBLHT2N105198CJN.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "欧盟 11-13 都柏林首次领导人级 AI 专题峰会",
+      "category": "AI",
+      "points": [
+        "冯德莱恩称建 7 座 AI 超级工厂、撬动约 300 亿欧元，技术主权至少需 5000 亿欧元，首批成果两周后公布；AI 治理 2027 年 2 月再议、2027 社会峰会为主题；乌克兰谈判欧洲团队为欧盟机构+英法德意波五国；将提第 22 轮对俄制裁。",
+        "马克龙 X 官宣 12-02 与荷兰首相耶滕在巴黎召集\"Tech Creators\"会；Mistral CEO 门施、辛顿参会。",
+        "来源 english.news.cn/20261114/28e9a81021724234ad09d5f86aaea9a6/c.html、xinhuanet.com/20261114/5219be7c23544551981baea4428b2acf/c.html、wap.eastmoney.com/a/202611143931069712.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "DeepSeek 11-13 晚开放\"全家桶应用 API\"",
+      "category": "AI",
+      "points": [
+        "V4.1-Flash（deepseek-flash）承载，Messages/Responses/Chat Completions 三协议；联网搜索（deepseek_web_search）、深度思考搜索、文件输入、链接阅读、语音（OCR/ASR/TTS）可单独调；开源可导入历史对话的前端 Demo，称可 1:1 复刻 App；token 外按次计费，搜索 5 元/千次、OCR 1.5 元/千页；off-peak 输入 $0.15/M、缓存命中 $0.003/M。",
+        "来源 it007.com/article-335885-1.html、news.qq.com/rain/a/20261114A0000U00、onlinedown.net/article/10048451.htm"
+      ],
+      "sources": []
+    },
+    {
+      "title": "外交部 11-13 宣布第 33 次领导人非正式会议 11-18~19 在深圳举",
+      "category": "时事",
+      "points": [
+        "外交部 11-13 宣布第 33 次领导人非正式会议 11-18~19 在深圳举行，习近平主持并发表讲话，主题\"建设亚太共同体，促进共同繁荣\"，优先领域开放/创新/合作；工商领导人峰会 11-17~18，主题\"共促繁荣，共赢未来\"，习近平出席开幕并作主旨演讲；期待达成\"深圳宣言\"。",
+        "来源 ipaper.ce.cn/pad/content/202611/14/content_341841.html、news.china.com.cn/2026-11/14/content_118773998.shtml"
+      ],
+      "sources": []
+    },
+    {
+      "title": "美国 11-13 下午 FAA 全国地面停飞",
+      "category": "时事",
+      "points": [
+        "22 个航路交通管制中心通信故障，出港航班停飞至另行通知（11:30pm ET 起）、入境国际航班个案处理；FlightAware 统计近 7000 航班延误或取消；2023 年 1 月以来首次全国停飞；FAA 与白宫当日再向国会要 301 亿美元空管改造费（去年已批 125 亿）。",
+        "来源 straitstimes.com（路透）、cn.chinadaily.com.cn/a/202611/14/WS6af78b2de4b0e14252fcb125.html、hindustantimes.com（直播）"
+      ],
+      "sources": []
+    }
+  ]
+}

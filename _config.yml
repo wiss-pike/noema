@@ -1,0 +1,6 @@
+exclude:
+  - preview.py
+  - README.md
+  - TODAY.md
+  - AUDIT.md
+  - publish_daily.py

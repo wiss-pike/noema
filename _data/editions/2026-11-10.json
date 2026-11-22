@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-10",
+  "window": "2026-11-10 08:00 — 次日 08:00（北京时间）",
+  "entries": [
+    {
+      "title": "Anthropic 发布 Claude Fable 5.2 / Mythos 5.2",
+      "category": "AI",
+      "points": [
+        "同底座，Fable 全用户开放（网安+生物安全限制），Mythos 仅审核机构；速度 +30%，API 价格 -20%（$8/$40 每百万 token）；称 1000+ 智能体 30 小时完成费马大定理形式化证明（形式化≠重新证明），8 天从空文件夹造出可启动操作系统原型。",
+        "IPO 路演最快 11-10 启动，估值传闻 1 万亿~1.5 万亿美元。",
+        "来源 theverge.com/ai-artificial-intelligence/1030005、bloomberg.com/news/articles/2026-11-09/anthropic-unveils-new-fable-mythos-ai-models-ahead-of-ipo、m.cls.cn/detail/2529571"
+      ],
+      "sources": []
+    },
+    {
+      "title": "英伟达董事会独立调查黄仁勋婚外情及女方涉情报背景；股价 11-09 收跌 4.2",
+      "category": "AI",
+      "points": [
+        "英伟达董事会独立调查黄仁勋婚外情及女方涉情报背景；股价 11-09 收跌 4.27% 报 178.67 美元，盘中 -8.8%，市值一夜蒸发逾 1900 亿美元（约 1.29 万亿元），七个月收盘新低；同日起股东集体诉讼；特朗普称相信黄仁勋、FBI 在查；众议院三委员会要求 11-18 闭门简报；中方驳斥\"间谍论\"。",
+        "来源 bloomberg.com/news/articles/2026-11-09/nvidia-sees-historic-split-from-s-p-as-stock-sinks-market-soars、theverge.com/ai-artificial-intelligence/1030422、news.qq.com/rain/a/20261110A0388C00"
+      ],
+      "sources": []
+    },
+    {
+      "title": "谷歌发布第八代 TPU 两款新变体",
+      "category": "AI",
+      "points": [
+        "8tx 机密计算（联合 AMD、硬件加密、最高 2 倍速），8i Max 双芯封装攻长上下文/智能体；一年内首发四款 TPU；Alphabet 早盘 +3%；未公布价格与上市时间。",
+        "来源 news.qq.com/rain/a/20261110A03F0700（凤凰/路透）、163.com/dy/article/LBC0C8HI0519DDQ2.html（第一财经）"
+      ],
+      "sources": []
+    },
+    {
+      "title": "美团开源 LongCat-2.5",
+      "category": "AI",
+      "points": [
+        "1.6 万亿总参数、480 亿激活、100 万上下文、MIT 协议，权重上 HuggingFace/ModelScope（含 W4A4 量化版），深度适配国产算力芯片。",
+        "来源 modelscope.cn/models/meituan-longcat/LongCat-2.5、donews.com/news/detail/1/6770707.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "特朗普 11-09 见卡塔尔首相后称对伊军事行动\"实际上已结束\"\"没必要再用\"，",
+      "category": "时事",
+      "points": [
+        "特朗普 11-09 见卡塔尔首相后称对伊军事行动\"实际上已结束\"\"没必要再用\"，维持现状；伊朗总统称最高领袖下令结束\"非战非和\"、愿谈但要求先解除制裁与封锁。",
+        "WTI 收跌约 4.9% 至 86.38 美元、布伦特 -6.24% 至 92.18 美元，美股三大指数涨超 2%。",
+        "来源 arabnews.com/middle-east/trump-sees-positive-momentum-for-iran-deal-after-qatar-pm-talks-3010816（AP）、world.people.com.cn/n1/2026/1110/c1002-40830826.html（新华社）、stcn.com/article/detail/4329521.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "CPI 同比 +0.7%（回落 0.2pp，环比持平），核心 CPI +0.8%",
+      "category": "时事",
+      "points": [
+        "CPI 同比 +0.7%（回落 0.2pp，环比持平），核心 CPI +0.8%；PPI 同比 +5.7% 创近 52 个月新高，环比 +0.7%；汽油同比 +22.4%、拉动 CPI 约 0.63pp。",
+        "来源 xinhuanet.com/fortune/20261110/830b78c183f7453792f834a0289e1463/c.html"
+      ],
+      "sources": []
+    }
+  ]
+}

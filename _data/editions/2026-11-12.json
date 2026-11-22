@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-12",
+  "window": "2026-11-12 08:00 — 次日 08:00（北京时间）",
+  "entries": [
+    {
+      "title": "英伟达董事会据悉准备罢免黄仁勋（WSJ",
+      "category": "AI",
+      "points": [
+        "最快 11-11 开专项会议投票；NYT：五名前员工指证第二段婚外情，对象为向其汇报的医疗健康业务副总裁 Kimberly Powell；董事会 11-10 已聘 Wachtell Lipton 独立调查）；11 日收涨 2.87%，盘后一度跌超 9%、收窄至 7%–8%；大摩继美银后移出\"首选股\"。",
+        "来源 theverge.com/tech/1031652/jensen-huang-rumor、finance.yahoo.com/markets/stocks/articles/nvidias-stock-dives-board-weighs-234215054.html、international.caixin.com/2026-11-12/102503788.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "OpenAI Q3 营收首破 100 亿美元（Q2 约 67 亿，环比近 +50",
+      "category": "AI",
+      "points": [
+        "OpenAI Q3 营收首破 100 亿美元（Q2 约 67 亿，环比近 +50%、同比约 2.6 倍），经营亏损 101 亿→109 亿，调整后营业利润率 -150%→-109%，年化营收约 500 亿美元，付费用户超 1 亿，企业业务环比翻倍（彭博/WSJ）。",
+        "来源 news.qq.com/rain/a/20261112A030XG00、163.com/dy/article/LBH4RGVK0519QIKK.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "百度文心 5.5 Flash Preview",
+      "category": "时事",
+      "points": [
+        "280B 总参/14B 激活/1M 上下文/200+ tok/s；API 每百万 token 输入忙时 2 元、闲时 1 元，输出忙时 8 元、闲时 4 元，限时五折；千帆上线，权重 11-25 开源；强化编程/游戏/3D；一周内第三次出手（11-05 Base 开源、11-09 ERNIE Evolve）。",
+        "来源 news.mydrivers.com/1/1165/1165101.htm、163.com/dy/article/LBGCIHJS0511ABV6.html、onlinedown.net/article/10048348.htm"
+      ],
+      "sources": []
+    },
+    {
+      "title": "DeepMind AlphaGenome 2",
+      "category": "AI",
+      "points": [
+        "条件模型，输入约 100 万碱基 DNA + 细胞类型/状态，预测表达、染色质可及性、甲基化及变异效应；1.07 亿单细胞图谱、68 种组织、人+鼠；识别表达相关变异数量接近上一代两倍，可外推到未见细胞与疾病状态；API 向非商业研究开放。",
+        "来源 ithome.com/1/025/840.htm、news.qq.com/rain/a/20261112A038PE00"
+      ],
+      "sources": []
+    },
+    {
+      "title": "美股 AI 板块反弹",
+      "category": "AI",
+      "points": [
+        "道指 +0.49% 52486.49、标普 +1.31% 7619.38、纳指 +1.60% 25466.19、纳指 100 +2.3%、费半 +5.66%；CoreWeave Q3 营收 36.61 亿 +168%、指引上调至 130–133 亿、订单积压 1325 亿、靠客户预付款压低融资成本，股价 +24.7%；Nebius +15.4%、甲骨文 +8.8%、闪迪 +13.7%、美光 +11.9%；Anthropic IPO 数倍超额认购（谷歌/英伟达各 100 亿、AMD 25 亿私募，含绿鞋总募资或达 1000 亿美元）；WTI +0.57% 86.53 美元、现货金 -1.1% 3987.86 美元。",
+        "来源 bloomberg.com/news/newsletters/2026-11-11/anthropic-ipo-oversubscription-fuels-ai-recovery-rally、finance.sina.com.cn/roll/2026-11-12/doc-iniymmzr3995197.shtml、cnfin.com/zs-lb/detail/20261112/4494335_1.html"
+      ],
+      "sources": []
+    },
+    {
+      "title": "俄美乌阿布扎比会谈 11 日结束",
+      "category": "时事",
+      "points": [
+        "仅达成大规模换俘（各超 1000 人，2–3 周内交接，人数 12 日确定）；领土、安全保障、欧洲安全架构仍存\"重大分歧\"；库什纳 12 日与威特科夫赴莫斯科见普京。",
+        "来源 news.cn/world/20261112/e9ed7534696e442a84cc3634c7161414/c.html、thestar.com.my/news/world/2026/11/12/ukraine039s-zelenskiy-says-progress-in-peace-talks-hinges-on-us-approach-to-russia（路透）、3w.huanqiu.com/a/de583b/4TzQMmBOE2C"
+      ],
+      "sources": []
+    }
+  ]
+}

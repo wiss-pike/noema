@@ -1243,3 +1243,70 @@ button { font: inherit; color: inherit; }
 @media print {
   .site-nav, .daynav { display: none !important; }
 }
+
+/* 封面、刊头与索引共用纸色、墨色和朱砂强调色。 */
+:root {
+  --paper: #f6f5ed;
+  --ink: #182f2b;
+  --accent: #9f4329;
+  --accent-soft: #efe5da;
+  --navy: #143c36;
+  --forest: #113d39;
+  --on-forest: #f5f2df;
+  --rule: #bbc1b4;
+}
+[hidden] { display: none !important; }
+.masthead-row { align-items: center; padding-block: 8px; }
+.mark { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 23px; }
+.mark::before { content: ""; width: 13px; height: 18px; background: repeating-linear-gradient(112deg,var(--forest) 0 2px, transparent 2px 4px); }
+.site-nav a, .archive-jump, .filter { display: inline-flex; align-items: center; min-height: 44px; }
+.site-nav { font-size: 13px; }
+.cover { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(30px,6vw,90px); padding-block: clamp(36px,6vw,80px); }
+.cover-kicker, .feature-meta { font-size: 12px; letter-spacing: .14em; margin: 0; }
+.cover-kicker { color: var(--accent); font-weight: 600; }
+.cover h1 { margin: 12px 0 18px -.045em; font: 400 clamp(74px,10vw,154px)/.94 Georgia,serif; letter-spacing: -.075em; }
+.cover h1 span { color: var(--accent); }
+.cover-description { line-height: 1.85; color: var(--ink-2); margin: 0; }
+.archive-jump { gap: 20px; border-bottom: 1px solid; margin-top: 16px; font-size: 14px; }
+.archive-jump:hover, .dispatch a:hover { color: var(--accent); }
+.cover-feature { display: block; background: var(--forest); color: var(--on-forest); overflow: hidden; }
+.cover-feature img { aspect-ratio: 2.65; display: block; width: 100%; height: auto; object-fit: cover; }
+.feature-caption { border-top: 1px solid #67837a; position: relative; padding: 18px 54px 24px 24px; }
+.feature-meta { color: #d4ddc8; display: flex; justify-content: space-between; gap: 12px; }
+.feature-meta time { font-variant-numeric: tabular-nums; }
+.feature-title { font: 500 clamp(18px,2vw,26px)/1.5 var(--serif); margin: 9px 0 0; text-wrap: balance; }
+.feature-arrow { position: absolute; right: 20px; bottom: 22px; font-size: 20px; }
+.cover-feature:hover .feature-title { text-decoration: underline; text-underline-offset: .22em; }
+.dispatch { display: grid; grid-template-columns: 3fr 1fr; border-block: 1px solid var(--ink); }
+.dispatch a { display: flex; align-items: center; min-width: 0; gap: 18px; padding: 14px 0; font-size: 14px; }
+.dispatch a + a { border-left: 1px solid var(--rule); margin-left: 22px; padding-left: 22px; }
+.dispatch strong { color: var(--accent); flex: none; }
+.dispatch span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dispatch i { margin-left: auto; font-style: normal; }
+.archive-title { font: 500 clamp(25px,3vw,38px)/1.2 var(--serif); color: var(--ink); letter-spacing: -.03em; }
+.filters { gap: 3px; }
+.filter { padding: 0 10px; }
+.filter + .filter::before { content: none; }
+.filter[aria-pressed=true] { color: var(--on-forest); background: var(--forest); box-shadow: none; }
+.search, .search:focus-within { width: 175px; min-height: 44px; }
+.search input { font-size: 16px; }
+.month-name, .brief-title { color: var(--forest); }
+.brief-head, .month-head { border-top: 3px solid var(--forest); padding-top: 20px; }
+.brief-kicker, .month-kicker, .month-num, .day-num { color: var(--accent); }
+.entry, .point, .trend, .paper { overflow-wrap: anywhere; }
+.day-row:hover, .item-link:hover { background: var(--paper-raise); }
+:focus-visible { outline: 2px solid var(--accent); }
+@media (max-width: 740px) {
+  .cover { grid-template-columns: 1fr; gap: 24px; }
+  .cover h1 { font-size: clamp(76px,19vw,110px); }
+  .cover-feature img { aspect-ratio: 4; }
+  .feature-caption { padding-block: 14px 18px; }
+  .dispatch { grid-template-columns: minmax(0,1fr) auto; }
+  .dispatch a { gap: 8px; font-size: 13px; }
+  .dispatch a + a { margin-left: 12px; padding-left: 12px; }
+  .dispatch a + a span { display: none; }
+  .tools, .month-tools { gap: 8px 16px; }
+  .search, .search:focus-within { width: 100%; }
+  .archive { padding-top: 34px; }
+  .archive-head { gap: 14px; }
+}

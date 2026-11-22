@@ -97,7 +97,7 @@
     }).join('');
 
     return '<article class="month-row' + (firstPaint ? ' reveal' : '') + '"' +
-      (firstPaint ? ' style="--d:' + (index * 70 + 560) + 'ms"' : '') + '>' +
+      (firstPaint ? ' style="--d:' + Math.min(index * 45, 180) + 'ms"' : '') + '>' +
       '<div class="month-lead">' +
         '<span class="month-year">' + esc(d.y) + '</span>' +
         '<span class="month-num">' + d.m + '</span>' +
@@ -113,11 +113,20 @@
     '</article>';
   }
 
-  function paintStats() {
-    var papers = document.querySelectorAll('[data-stat="papers"]');
-    var months = document.querySelectorAll('[data-stat="months"]');
-    Array.prototype.forEach.call(papers, function (n) { n.textContent = DATA.papers.length; });
-    Array.prototype.forEach.call(months, function (n) { n.textContent = groups(DATA.papers).length; });
+  function showCover() {
+    const latest = DATA.papers.slice().sort(byDate)[0];
+    if (latest) {
+      $('feature-title').textContent = latest.titleZh;
+      $('feature-date').textContent = latest.date.replaceAll('-', '.');
+      $('feature-date').dateTime = latest.date;
+      $('cover-feature').href = monthHref(latest.month) + '#p-' + encodeURIComponent(latest.id);
+    }
+    NoemaContent.daily().then(function (archive) {
+      const day = archive.items[0];
+      if (!day) return;
+      $('latest-day').href = 'daily.html?d=' + encodeURIComponent(day.date);
+      $('latest-headline').textContent = day.entries[0]?.title || day.lead || day.date;
+    }).catch(function () { /* The static link still opens the daily archive. */ });
   }
 
   function renderIndex() {
@@ -138,7 +147,7 @@
       ? '匹配 ' + total + ' 篇'
       : '共 ' + DATA.papers.length + ' 篇 · ' + gs.length + ' 个月';
     $('empty').hidden = total > 0;
-    paintStats();
+    if (firstPaint) showCover();
     firstPaint = false;
   }
 
@@ -181,10 +190,10 @@
   function linksHTML(p) {
     var L = p.links || {};
     var out = [];
-    if (L.paper) out.push('<a class="link" href="' + esc(L.paper) + '" target="_blank" rel="noopener">论文原文<span class="arrow">↗</span></a>');
-    if (L.pdf) out.push('<a class="link link-primary" href="' + esc(L.pdf) + '" download>论文原件 PDF<span class="arrow">↓</span></a>');
-    if (L.blog) out.push('<a class="link" href="' + esc(L.blog) + '" target="_blank" rel="noopener">作者博客<span class="arrow">↗</span></a>');
-    if (L.code) out.push('<a class="link" href="' + esc(L.code) + '" target="_blank" rel="noopener">代码与权重<span class="arrow">↗</span></a>');
+    if (NoemaContent.safeLink(L.paper)) out.push('<a class="link" href="' + esc(L.paper) + '" target="_blank" rel="noopener">论文原文<span class="arrow">↗</span></a>');
+    if (NoemaContent.safeLink(L.pdf, true)) out.push('<a class="link link-primary" href="' + esc(L.pdf) + '" download>论文原件 PDF<span class="arrow">↓</span></a>');
+    if (NoemaContent.safeLink(L.blog)) out.push('<a class="link" href="' + esc(L.blog) + '" target="_blank" rel="noopener">作者博客<span class="arrow">↗</span></a>');
+    if (NoemaContent.safeLink(L.code)) out.push('<a class="link" href="' + esc(L.code) + '" target="_blank" rel="noopener">代码与权重<span class="arrow">↗</span></a>');
     if (!out.length) return '';
     return '<div class="paper-links">' + out.join('') + '</div>';
   }
@@ -253,6 +262,7 @@
     gs.forEach(function (g, i) { if (g.month === m) idx = i; });
 
     if (idx === -1) {
+      document.querySelector('.toc').hidden = true;
       document.title = '没有这个月份 · Noema';
       $('month-kicker').textContent = '—';
       $('month-title').textContent = '空';
@@ -286,7 +296,8 @@
       ? '匹配 ' + list.length + ' 篇'
       : '共 ' + all.length + ' 篇';
 
-    buildToc(tocInfos(list.length ? list : all));
+    document.querySelector('.toc').hidden = !list.length;
+    buildToc(tocInfos(list));
     refreshReading();
 
     var inline = $('toc-inline');
@@ -390,7 +401,9 @@
         var btn = e.target.closest ? e.target.closest('.filter') : null;
         if (!btn) return;
         state.dir = btn.getAttribute('data-dir') || '';
-        renderChips();
+        chips.querySelectorAll('button').forEach(function (chip) {
+          chip.setAttribute('aria-pressed', String(chip === btn));
+        });
         render();
       });
     }
@@ -404,8 +417,10 @@
         render();
       });
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    if (monthPage) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+    }
   }
 
   function render() {
