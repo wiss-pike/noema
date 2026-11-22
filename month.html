@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>月度归档 · Noema</title>
+<meta name="description" content="Noema 月度归档：当月每篇论文的方向、中英文标题、一句话结论、完整中文解读、原文与论文原件。">
+<meta name="theme-color" content="#F6F3EC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F6F3EC'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' text-anchor='middle' fill='%23171512'%3EN%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="month">
+
+<a class="skip-link" href="#paper-list">跳到正文</a>
+
+<div class="readbar" aria-hidden="true"><i id="readbar-fill"></i></div>
+
+<header class="masthead">
+  <div class="shell masthead-row">
+    <a class="mark" href="index.html">Noema</a>
+    <nav class="site-nav" aria-label="板块">
+      <a href="index.html" aria-current="page">论文归档</a>
+      <a href="daily.html">日报</a>
+      <a href="weekly.html">周报</a>
+    </nav>
+  </div>
+</header>
+
+<main class="shell month-shell">
+
+  <header class="month-head">
+    <p class="month-kicker" id="month-kicker">—</p>
+    <h1 class="month-name" id="month-title">加载中</h1>
+    <p class="month-meta" id="month-meta"></p>
+  </header>
+
+  <div class="month-tools">
+    <div class="filters" id="chips" role="group" aria-label="按方向筛选"></div>
+    <label class="search">
+      <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.4"></circle>
+        <path d="M13.2 13.2 17 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
+      </svg>
+      <input id="q" type="search" placeholder="标题或作者…" autocomplete="off" aria-label="搜索标题或作者">
+    </label>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
+
+  <details class="toc-inline" id="toc-inline">
+    <summary><span>目录</span><span class="toc-progress-label" data-progress>阅读 0%</span></summary>
+    <nav class="toc-nav" data-toc aria-label="本月目录"></nav>
+  </details>
+
+  <div class="month-layout">
+    <div id="paper-list" class="paper-list"></div>
+
+    <aside class="toc" aria-label="目录">
+      <p class="toc-title">目录</p>
+      <nav class="toc-nav" data-toc></nav>
+      <div class="toc-progress">
+        <span class="toc-progress-label" data-progress>阅读 0%</span>
+        <i class="toc-track"><b id="toc-fill"></b></i>
+      </div>
+    </aside>
+  </div>
+
+  <p class="load-error" id="load-error" hidden></p>
+
+  <nav class="month-pager" id="pager" aria-label="月份导航"></nav>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell footer-row">
+    <span class="footer-mark">Noema</span>
+    <span class="footer-note">架构 · 训练方法 · Agent · 评测</span>
+    <span class="footer-note">2026</span>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

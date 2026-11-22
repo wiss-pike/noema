@@ -1,0 +1,105 @@
+{
+  "site": {
+    "title": "Noema",
+    "subtitle": "诺埃玛 · 论文精读归档",
+    "intro": "每周一篇，只收 AI 核心技术方向。读过的论文按月留在这里，随时可以翻回去。",
+    "updated": "2026-11-22"
+  },
+  "directions": ["架构", "训练方法", "Agent", "评测"],
+  "papers": [
+    {
+      "id": "2026-11-16-ncm",
+      "date": "2026-11-16",
+      "month": "2026-11",
+      "direction": "架构",
+      "titleZh": "下一概念建模：快速并行的从粗到细文本生成",
+      "titleEn": "Next-Concept Modeling: Fast, Parallel Coarse-to-Fine Text Generation",
+      "authors": "Hermann Kumbong、Ishan S. Khare（共同一作）、Iddah Mlauzi、Andrew Woen、Charles Ding、E. Kelly Buchanan、Azalia Mirhoseini、Christopher Ré（Stanford University）、Simran Arora（Together AI）；两位共同一作为通讯作者",
+      "venue": "arXiv:2610.14162（cs.CL，交叉 cs.AI / cs.LG），v1 2026-10-09；作者团队博客 2026-10-12；第一作者 X 帖 2026-10-14",
+      "tags": ["非自回归生成", "VQ-VAE", "并行解码"],
+      "readTime": "约 2 小时",
+      "oneLine": "把一段文本编码成「从粗到细」的离散码层级，每层并行生成，十来个前向就把整段写完，在 100M 参数这个量级上比最强扩散语言模型快 10–31 倍，训练见到的 token 也少 4–5 倍。",
+      "links": {
+        "paper": "https://arxiv.org/abs/2610.14162",
+        "pdf": "assets/papers/Next-Concept-Modeling.pdf",
+        "blog": "https://hazyresearch.stanford.edu/blog/2026-10-12-ncm",
+        "code": "https://github.com/HazyResearch/ncm"
+      },
+      "body": [
+        {"t": "h", "text": "为什么值得读"},
+        {"t": "p", "text": "这篇动的不是某个模块，而是「语言模型只能一个字一个字往外吐」这个从 GPT-2 时代就没被真正推翻的假设。我们每天用的 LLM 都在按 token 顺序解码，非自回归这条线喊了很多年，多数工作停在「比自回归差一点但快一点」。Stanford Hazy Research 把图像里 VAR 的「下一尺度预测」搬进文本，在约一亿参数规模上把无条件生成、翻译、摘要、数独四类任务逐一跑完，还把代码、权重、分词后的数据全部放出来，作者自己也写了博客把设计取舍摊开讲。"},
+        {"t": "h", "text": "作者本人怎么说"},
+        {"t": "quote", "text": "However, DLMs still require many sampling steps, process the full sequence at each step, and often need many passes over the training data.", "note": "动机定得很具体：扩散能并行，但步数多、每步都要算整条序列、还要反复过数据，这三条是这篇要打的靶子。"},
+        {"t": "quote", "text": "Across a wide range of tasks (unconditional generation, translation, summarization, and reasoning), NCM achieves competitive or better quality than strong diffusion baselines while generating text 10–31× faster and seeing 4–5× fewer training tokens.", "note": "博客 TL;DR 给了完整承诺，口径是「对比扩散基线」，不是「对比自回归」。"},
+        {"t": "quote", "text": "Efficiency in the diffusion language modeling literature is often reported through the number of function evaluations (NFE), which overlooks potentially substantial differences in the cost per evaluation.", "note": "NFE（function evaluation，前向调用次数）是扩散圈的老指标，但每步成本不同，所以他们改报单张 H100 的墙钟时间。"},
+        {"t": "quote", "text": "each level has its own codebook, nested dropout encourages earlier levels to capture meaningful information without relying on later levels, and a token-level reconstruction objective promotes accurate text recovery.", "note": "把图像那套搬到文本，他们自己点出改了三处：每层独立码本、nested dropout 逼前几层单独就有信息量、加 token 级重建目标。"},
+        {"t": "quote", "text": "NCM fixes both the hierarchy depth K and the per-level lengths ℓk, so even short continuations traverse the full hierarchy. Our main experiments use generators of roughly 100M parameters, and our scaling study extends to 725M parameters on LM1B.", "note": "局限是他们自己写在附录里的：层级深度和每层长度写死，写一句话也要走完全部层级；主实验 100M，规模只探到 725M 且只在 LM1B。"},
+        {"t": "h", "text": "问题背景"},
+        {"t": "p", "text": "自回归一步一个 token，KV cache 好用但顺序不可并行；扩散语言模型整条序列一起预测，可步数一少就掉质量，蒸馏成少步学生会牺牲多样性。作者走的第三条路是层级：先定骨架，再补细节，层数远小于 token 数。"},
+        {"t": "h", "text": "方法核心"},
+        {"t": "p", "text": "两阶段。第一阶段训多尺度残差 VQ-VAE（vector quantization，把连续向量换成码本里最近的离散码）：编码器给每个位置一个隐向量，第 k 层只量化前面各层留下的残差，层号越大码数越多，最后一层等于 token 长度；附录 A 给了 ELBO 推导，冻结分词器后只有生成项参与训练。"},
+        {"t": "p", "text": "第二阶段冻结分词器，训一个普通 transformer 从累计重建预测第 k 层，层内所有码互相独立、一次并行出，block-diagonal attention 把同层遮住；训练时全部层一次前向算完交叉熵，并随机破坏一部分条件码（平均 0.5）逼模型会纠错。LM1B 配置是 12 层、每层码本 8192、层长从 1 条码线性涨到 128 条，生成器 12 个 block、宽 768、约 97M。"},
+        {"t": "h", "text": "快是怎么来的"},
+        {"t": "p", "text": "这是最值得学的一层。扩散每步都要对整条序列跑一次前向，减步数就掉质量；NCM 的步数等于层数（12 或 32，远小于 128 个 token），而且前几层只有 1 条、几条码，序列短、注意力矩阵小，单步成本跟着降。所以它的加速是「步数少 × 每步便宜」两个因子乘出来的，不是单纯把 token 塞进并行。论文把这条讲得很直白：既然每步成本不同，就该报墙钟时间而不是 NFE。消融里层数 4/8/16/32 逐级变好但边际递减，也印证层数就是可控的速度—质量旋钮。"},
+        {"t": "h", "text": "关键实验与数字"},
+        {"t": "p", "text": "无条件生成（表 8）：LM1B 上 NCM 12 步拿到 GPT-2-large 打分下的生成困惑度 93.05、unigram 熵 4.31，DUO 要 128 步才 97.30，MDLM 115.45，真实数据 53.51——所以质量只是「好过扩散基线」，离真数据还远。OpenWebText 上 32 步 83.12，而 FLM 1024 步是 62.23，论文解释 FLM 熵只有 5.21、低于数据的 5.44，靠牺牲多样性换低困惑度。"},
+        {"t": "p", "text": "条件任务：XSum 摘要用 88M 模型、8 步拿 ROUGE-L 28.0，超过 AURORA-LM 的 26.6（128 步）；加 MBR（minimum Bayes risk，多生成几个候选再挑跟其他候选最像的那个）到 29.6，也高过带 guidance 的 AURORA。WMT14 德英翻译 22.6 BLEU，仍低于同规模自回归的 25.2，加 MBR 才追平。"},
+        {"t": "p", "text": "数独最能说明粗到细的好处：25M 模型 12 步，简单/中等/难全解率 99.5 / 96.5 / 86.1，最强扩散基线 FMLM+ 16 步是 97.7 / 92.8 / 81.3，自回归只有 14.6 / 5.1 / 1.0。训练预算 LM1B 13.36B token 对 66B，OpenWebText 127B 对 500B 以上，论文自己说明这是 token 暴露量、不是 FLOPs。"},
+        {"t": "h", "text": "与已有工作的差别"},
+        {"t": "p", "text": "图像那边的 VAR 是同一思路，但文本要求精确还原，一个数字错数独就废了，所以分词器重建率被逼到 98.8%–100%，码本利用率 62%–90%。对少步采样与蒸馏一派，NCM 不蒸馏、不额外教师，用固定层级顺序换稳定性；对块自回归，它在层内真并行，不靠块内串行换 KV cache。消融里 block-diagonal attention 也压过 block-causal 与滑窗，困惑度 15.41 对 19.63、17.84，耗时 5.65 秒对 7.90、6.83 秒。"},
+        {"t": "h", "text": "局限与争议"},
+        {"t": "p", "text": "以下是我读出来的判断，不是作者原话。"},
+        {"t": "ul", "items": [
+          "31 倍只在 XSum 成立，而 XSum 目标长度只有 48 个 token，短目标天然利好多步并行；长文本的速度优势论文没给数。",
+          "主战场对比扩散基线，翻译上还没赢自回归，「替代逐 token 解码」在 100M 只是开了个头。",
+          "指标本身可疑：用 GPT-2-large 去给非自回归样本打困惑度，只说明「像不像真文本」，熵必须一起看，否则低困惑度可能只是模式塌缩。",
+          "附录那张逐层解码表暴露中间态不单调：第 8 层 BLEU 51.7，第 9 层掉到 38.9，最后才 77.8；粗层不是稳定先验，后面得能改前面的错。",
+          "结果都是单次运行、seed 42，没有方差。"
+        ]},
+        {"t": "h", "text": "怎么读"},
+        {"t": "p", "text": "前置四样：attention 与 FFN 各自干什么、自回归和掩码语言模型的区别、向量量化「查最近码本」这个直觉、BLEU 与 ROUGE 是什么。VQ 的 EMA 更新和 ELBO 推导可以先跳。"},
+        {"t": "p", "text": "顺序：先看博客那条逐层解码的交互图，建立「骨架先出、细节后补」的直觉，约 10 分钟；再读 §3.1–3.3，把残差量化和多尺度写清楚；然后直接看表 2、表 3、图 5；附录 I 的局限必读。总两小时够拿到主干。"},
+        {"t": "h", "text": "现在就能做的一件事"},
+        {"t": "callout", "text": "把仓库跑起来：clone https://github.com/HazyResearch/ncm ，按 README 下 hazyresearch/ncm-checkpoints 与 ncm-datasets，跑 python evaluate.py --config config/eval/xsum.yaml。重点不是分数，而是自己把步数从 8 调到 4 和 16，看质量怎么掉——做完这一步，你就亲手验证了「少步数掉质量」这条被反复引用的结论。"}
+      ]
+    },
+    {
+      "id": "2026-11-09-sleep",
+      "date": "2026-11-09",
+      "month": "2026-11",
+      "direction": "训练方法",
+      "titleZh": "语言模型需要睡眠：学会自我修改与巩固记忆",
+      "titleEn": "Language Models Need Sleep: Learning to Self-Modify and Consolidate Memories",
+      "authors": "Google Research",
+      "venue": "arXiv:2606.03979；作者官方博客 2026-10-27",
+      "tags": ["持续学习", "知识巩固", "MoE"],
+      "readTime": "约 2 小时",
+      "oneLine": "在「睡眠」期用低秩 MoE 专家扩容、反向蒸馏和自生成的「做梦」数据，把对话中学到的东西固化进权重；消融显示真正值钱的是「做梦」——SQuAD 无上下文 35.7 → 48.9，扩容与蒸馏合计只值 2.3 分。",
+      "links": {
+        "paper": "https://arxiv.org/abs/2606.03979",
+        "pdf": "assets/papers/Language-Models-Need-Sleep.pdf"
+      },
+      "body": [
+        {"t": "h", "text": "选读说明"},
+        {"t": "p", "text": "论文 v1 在六月首发，严格讲不算近三个月的新论文。选它是因为十月底有作者本人在官方博客做的一手解读，博客和正文可以对照阅读。"},
+        {"t": "h", "text": "它解决什么问题"},
+        {"t": "p", "text": "模型部署后如何在权重层面固化对话中学到的东西，而不是靠提示词硬撑。这是一个很具体的结构问题，不是又一个「上下文更长」的工程优化。"},
+        {"t": "h", "text": "机制"},
+        {"t": "p", "text": "把生命周期切成「清醒」和「睡眠」。睡眠期先解锁预分配的低秩 MoE 专家做扩容，再用 Knowledge Seeding 反向蒸馏（让小模型当老师、扩容后的大模型当学生），最后用自生成的「做梦」数据巩固。作者明确说这只是借神经科学的词，机制仍是固定架构加人工设定的训练规则。"},
+        {"t": "h", "text": "最值得一看的是消融结果"},
+        {"t": "p", "text": "SQuAD 无上下文从 31.9 到 33.4（仅微调），再到 35.7（巩固全套但关闭做梦），最后到 48.9。扩容、蒸馏、模仿奖励三样加起来只值 2.3 分，做梦一步值 13.2 分。博客用大半篇幅讲巩固，真正承担「记住新事实」这项成绩的是做梦，这层信息只有翻到论文才看得到。"},
+        {"t": "h", "text": "阅读时要保留的怀疑"},
+        {"t": "ul", "items": [
+          "没有代码和权重，复现门槛高。",
+          "表 2 至表 4 都是单点数字，没有种子方差；AIME-25 的 +0.9 在 average@16 下说明不了胜负。",
+          "算力只给相对倍数，没有 GPU 小时。",
+          "规模停在 8B，没有更大模型的趋势。"
+        ]},
+        {"t": "h", "text": "怎么读"},
+        {"t": "p", "text": "先看 §3.2 到 §3.4 三节机制，再跳到 §4.1 的 Table 3 看那条消融阶梯，最后回 §2 补 continuum memory hierarchy。博客 15 分钟，正文约 90 分钟，附录 B.2 和 B.5 各 10 分钟，两小时能拿到主干。"},
+        {"t": "h", "text": "现在就能做的一件事"},
+        {"t": "callout", "text": "把 Table 3 那五行数字抄下来算相邻差值，就能直观看到「做梦」这一步的分量；再对照图 6 的 BABILong 曲线，判断它赢在机制还是赢在训练协议。"}
+      ]
+    }
+  ]
+}
