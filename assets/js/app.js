@@ -52,9 +52,11 @@
     var dir = p.get('d') || '';
     if (dir && (DATA.directions || []).indexOf(dir) === -1) dir = '';
     state.dir = dir;
-    state.q = (p.get('q') || '').trim();
     var input = $('q');
-    if (input && state.q) input.value = state.q;
+    var savedQuery = p.get('q');
+    // The reader may type while the archive data is still loading.
+    state.q = (savedQuery === null && input ? input.value : savedQuery || '').trim();
+    if (input && savedQuery !== null) input.value = state.q;
   }
 
   function writeUrl() {
