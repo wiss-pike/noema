@@ -1,5 +1,9 @@
 # 更新日志
 
+## 2026-11-23 · 补充计算机视觉和机器学习期刊
+
+- 新增 International Journal of Computer Vision 和 Machine Learning 的开放获取原创论文。采集时核对 DOI、在线发表日、版权许可和正式全文。
+
 ## 2026-11-23 · 补充机器学习期刊与语音论文
 
 - 新增 JMLR 和 ISCA Archive 的 Interspeech 论文。JMLR 从 PDF 首页核对发表月份，Interspeech 标明会议日期。

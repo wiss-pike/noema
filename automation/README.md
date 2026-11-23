@@ -6,6 +6,8 @@
 
 每周一北京时间 18:00 对应 Cron `0 10 * * MON`。论文任务从 arXiv、Hugging Face Papers、ACL Anthology、PMLR、JMLR 和 ISCA Archive 的 Interspeech 论文集发现近 92 天的 AI 核心技术候选。arXiv 原文读取 HTML，其他出版来源在官方详情页核对元数据后读取公开 PDF。JMLR 的发表月份取自 PDF 首页，Interspeech 标明官方论文集的会议开幕日期。不同平台的版本按标题和作者去重。作者项目页须由论文链接并能核对身份与主题。精读面向大一读者，正文 1500–2500 字，保留原标题，逐字核对摘要、结论或讨论的引文，并验证实验数字。通过校验后写入独立的 `weekly_papers` 表。月度归档和首页通过只读 `/api/papers` 加载，失败时回退到静态归档。网页链接到官方 PDF 或 HTML 全文。
 
+International Journal of Computer Vision 和 Machine Learning 从 Springer Nature 的官方期刊目录发现候选，筛选发表在日期窗口内的开放获取原创论文。阅读正式 HTML 时核对 DOI、线上发表日期、Creative Commons 许可和官方 PDF 地址。
+
 ## 测试
 
 在本目录运行 `npm ci` 和 `npm test`。测试覆盖日期窗口、链接与来源比例、重复运行不重复写稿、日报接口。模拟模型回复用于验证数据与程序行为。

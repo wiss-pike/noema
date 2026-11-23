@@ -19,6 +19,38 @@ const ACL = 'https://aclanthology.org/';
 const PMLR = 'https://proceedings.mlr.press/';
 const JMLR = 'https://jmlr.org/';
 const ISCA = 'https://www.isca-archive.org/';
+const SPRINGER = 'https://link.springer.com/';
+const SPRINGER_JOURNALS = {
+  11263: 'International Journal of Computer Vision',
+  10994: 'Machine Learning',
+};
+
+export function springerRedirect(location, current, original) {
+  if (!location) return null;
+  const next = new URL(location, current);
+  const initial = new URL(original);
+  if (next.protocol !== 'https:' || next.port || next.username || next.password) return null;
+  if (next.hostname === 'link.springer.com' && next.pathname === initial.pathname) return next;
+  if (next.hostname === 'idp.springer.com' && ['/authorize', '/transit'].includes(next.pathname) &&
+      next.searchParams.get('redirect_uri') === initial.href) return next;
+  return null;
+}
+
+export async function springerPage(original) {
+  let url = new URL(original);
+  if (url.origin !== new URL(SPRINGER).origin || url.username || url.password) throw new Error('Invalid Springer page');
+  const signal = AbortSignal.timeout(18000);
+  for (let n = 0; n < 4; n++) {
+    const response = await fetch(url, { redirect: 'manual', signal, headers: { Accept: 'text/html' } });
+    if (response.ok && url.hostname === 'link.springer.com') return response.text();
+    const next = [301, 302, 303, 307, 308].includes(response.status) &&
+      springerRedirect(response.headers.get('Location'), url, original);
+    await response.body?.cancel();
+    if (!next) break;
+    url = next;
+  }
+  throw new Error('Springer public page unavailable');
+}
 const ACL_ID = /^\d{4}\.[a-z0-9-]+\.\d+$/;
 const PMLR_PATH = /^v\d{1,4}\/[a-z0-9_-]+\.html$/;
 const JMLR_PATH = /^papers\/v(\d{1,3})\/(\d{2}-\d{3,5})\.html$/;
@@ -111,6 +143,27 @@ export function readInterspeech(html, year, window) {
   return limit(papers);
 }
 
+export function readSpringerJournal(html, journal, window) {
+  const venue = SPRINGER_JOURNALS[journal];
+  if (!venue) return [];
+  const papers = [];
+  for (const [, card] of html.matchAll(/<article class="app-card-open\b[^"]*"[^>]*>([\s\S]*?)<\/article>/gi)) {
+    const meta = card.match(/<div\b[^>]*data-test="meta"[^>]*>([\s\S]*?)<\/div>/i)?.[1];
+    if (!meta || !/>\s*Open access\s*</i.test(meta) || !/>\s*(?:OriginalPaper|Research Article|Original Research)\s*</i.test(meta)) continue;
+    const published = date(meta.match(/>\s*(\d{1,2} [a-z]+ \d{4})\s*</i)?.[1]);
+    const heading = card.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/i)?.[1];
+    const link = heading?.match(/<a\b[^>]*href="\/article\/(10\.1007\/s\d{5}-\d{3}-\d{5}-[a-z0-9])"[^>]*>([\s\S]*?)<\/a>/i);
+    if (!link || !link[1].startsWith('10.1007/s' + journal + '-') || !recent(published, window)) continue;
+    const title = clean(link[2]);
+    if (!title || FRONT_MATTER.test(title)) continue;
+    const authors = Array.from(card.matchAll(/<li class="app-author-list__item">([\s\S]*?)<\/li>/gi), match =>
+      ({ name: clean(match[1]) })).filter(author => author.name);
+    papers.push({ id: 'springer:' + link[1], publisher: 'springer', journal, title, published, authors,
+      venue, paperUrl: SPRINGER + 'article/' + link[1] });
+  }
+  return limit(papers);
+}
+
 export async function discoverPublished(window) {
   const year = window.to.slice(0, 4);
   const issueYears = Array.from(new Set([year, window.from.slice(0, 4)]));
@@ -140,6 +193,10 @@ export async function discoverPublished(window) {
         if (result.status === 'rejected') console.warn('ISCA proceedings unavailable', String(result.reason));
       }
       return limit(results.flatMap(result => result.status === 'fulfilled' ? result.value : []));
+    }),
+    ...Object.keys(SPRINGER_JOURNALS).map(async journal => {
+      const issue = await springerPage(SPRINGER + 'journal/' + journal + '/articles');
+      return readSpringerJournal(issue, journal, window);
     }),
   ];
   return (await Promise.allSettled(requests)).map((result, index) => {
@@ -190,6 +247,25 @@ export function readPublication(html, paper) {
     clean(html.match(/<p\b[^>]*\bclass=(?:"abstract"|abstract\b)[^>]*>([\s\S]*?)<\/p>/i)?.[1]) ||
     metadata(html, 'description')[0] || paper.abstract || '';
   return { ...paper, title, authors, published, pdf, abstract, venue: field('conference_title') || field('journal_title') || paper.venue };
+}
+
+export function readSpringerPublication(html, paper) {
+  const field = name => metadata(html, 'citation_' + name)[0];
+  const doi = field('doi');
+  const title = field('title');
+  const venue = field('journal_title');
+  const published = field('online_date')?.replaceAll('/', '-');
+  const pdf = field('pdf_url');
+  const authors = metadata(html, 'citation_author').map(name => ({ name: name.split(', ').reverse().join(' ') }));
+  const rights = html.match(/id="rightslink-content"[^>]*>([\s\S]*?)<\/section>/i)?.[1];
+  const open = metadata(html, 'access')[0] === 'Yes' &&
+    /href="https?:\/\/creativecommons\.org\/licenses\/[a-z-]+\/\d+\.\d+\//i.test(rights);
+  if (!open || !title || !authors.length || !/^\d{4}-\d{2}-\d{2}$/.test(published) ||
+      venue !== SPRINGER_JOURNALS[paper.journal] || paper.id !== 'springer:' + doi ||
+      paper.paperUrl !== SPRINGER + 'article/' + doi || pdf !== SPRINGER + 'content/pdf/' + doi + '.pdf') {
+    throw new Error('Missing or unverified open Springer journal metadata');
+  }
+  return { ...paper, title, venue, authors, published, pdf };
 }
 
 export async function downloadPdf(url) {

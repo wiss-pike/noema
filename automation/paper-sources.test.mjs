@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { readAcl, readInterspeech, readJmlr, readPmlrVolume, readPublication } from './paper-sources.mjs';
-import { jmlrMonth, readPdfText, repeated } from './papers.mjs';
+import { readAcl, readInterspeech, readJmlr, readPmlrVolume, readPublication, readSpringerJournal,
+  readSpringerPublication, springerRedirect } from './paper-sources.mjs';
+import { jmlrMonth, readPdfText, readSpringerText, repeated } from './papers.mjs';
 
 const period = { from: '2026-08-23', to: '2026-11-23' };
 
@@ -96,4 +97,59 @@ test('Interspeech uses the proceedings dates and accepts only its linked paper P
     '<meta name="citation_pdf_url" content="https://www.isca-archive.org/interspeech_2026/example26_interspeech.pdf"></head>';
   assert.equal(readPublication(meta, paper).published, '2026-09-27');
   assert.throws(() => readPublication(meta.replace('example26_interspeech.pdf', 'other26_interspeech.pdf'), paper), /unverified/);
+});
+
+test('Springer discovery only admits recent open original research in the selected journal', () => {
+  const card = (doi, model, type, date) => '<article class="app-card-open app-card-open--has-image">' +
+    '<h2><a href="/article/' + doi + '">Benchmark for Visual Models</a></h2>' +
+    '<div data-test="meta"><div><span>' + type + '</span><span>' + model +
+    '</span><span>' + date + '</span></div></div></article>';
+  const valid = '10.1007/s11263-026-03034-4';
+  const other = '10.1007/s10994-026-07065-3';
+  const list = card(valid, 'Open access', 'OriginalPaper', '07 October 2026') +
+    card(valid, 'Subscription', 'OriginalPaper', '09 October 2026') +
+    card(valid, 'Open access', 'Editorial', '07 October 2026') +
+    card(valid, 'Open access', 'OriginalPaper', '07 July 2026') +
+    card(other, 'Open access', 'OriginalPaper', '07 October 2026');
+  const [paper, extra] = readSpringerJournal(list, '11263', period);
+  assert.equal(paper.id, 'springer:' + valid);
+  assert.equal(paper.published, '2026-10-07');
+  assert.equal(extra, undefined);
+});
+
+test('Springer verifies publisher DOI, open licence, date and full text independently', () => {
+  const doi = '10.1007/s11263-026-03034-4';
+  const paper = { journal: '11263', id: 'springer:' + doi, paperUrl: 'https://link.springer.com/article/' + doi };
+  const head = '<head><meta name="access" content="Yes">' +
+    '<meta name="citation_title" content="Benchmark for Visual Models"><meta name="citation_author" content="Author, First">' +
+    '<meta name="citation_online_date" content="2026/10/07"><meta name="citation_publication_date" content="2026/10">' +
+    '<meta name="citation_journal_title" content="International Journal of Computer Vision">' +
+    '<meta name="citation_doi" content="' + doi + '">' +
+    '<meta name="citation_pdf_url" content="https://link.springer.com/content/pdf/' + doi + '.pdf"></head>';
+  const body = '<section data-title="Abstract"><h2>Abstract</h2><p>Original published abstract.</p></section>' +
+    '<section data-title="Introduction"><h2>Introduction</h2><p>' + 'We study a visual model and confirm that the task is reproducible. '.repeat(70) +
+    '</p></section><section data-title="Conclusion"><h2><span>6 </span>Conclusion</h2>' +
+    '<p>Concluding results from the official paper.</p></section>' +
+    '<section aria-labelledby="Bib1"><h2>References</h2><p>Excluded citation information.</p></section>';
+  const rights = '<section><div id="rightslink-content"><a href="https://creativecommons.org/licenses/by/4.0/">CC BY</a></div></section>';
+  const official = readSpringerPublication(head + body + rights, paper);
+  assert.equal(official.published, '2026-10-07');
+  assert.deepEqual(official.authors, [{ name: 'First Author' }]);
+  assert.throws(() => readSpringerPublication(head + body, paper), /unverified open/);
+  assert.throws(() => readSpringerPublication(head + body + rights, { ...paper, journal: '10994' }), /unverified open/);
+  const content = readSpringerText(head + body + rights);
+  assert.equal(content.abstract, 'Original published abstract.');
+  assert.match(content.conclusion, /official paper/);
+  assert.doesNotMatch(content.body, /Excluded citation information/);
+});
+
+test('Springer only follows the anonymous publisher handoff back to the original page', () => {
+  const original = 'https://link.springer.com/journal/11263/articles';
+  const idp = 'https://idp.springer.com/authorize?redirect_uri=' + encodeURIComponent(original);
+  assert.equal(springerRedirect(idp, original, original).href, idp);
+  const returned = original + '?error=cookies_not_supported&code=example';
+  assert.equal(springerRedirect(returned, idp, original).href, returned);
+  assert.equal(springerRedirect('https://idp.springer.com/authorize?redirect_uri=https://other.example/', original, original), null);
+  assert.equal(springerRedirect('https://other.example/journal/11263/articles', original, original), null);
+  assert.equal(springerRedirect('https://link.springer.com/journal/10994/articles', original, original), null);
 });

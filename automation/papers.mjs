@@ -1,5 +1,5 @@
 import { XMLParser } from 'fast-xml-parser';
-import { clean, discoverPublished, downloadPdf, metadata, readPublication, source } from './paper-sources.mjs';
+import { clean, discoverPublished, downloadPdf, metadata, readPublication, readSpringerPublication, source, springerPage } from './paper-sources.mjs';
 
 export const PAPER_CRON = '0 10 * * MON';
 const DAY = 86_400_000;
@@ -69,8 +69,12 @@ async function ask(env, system, data, maxTokens, json = true) {
 
 function paperText(html) {
   const main = html.split(/<\/article>/i, 1)[0];
-  const blocks = main.match(/<(?:h[1-5]|p|figcaption|caption)\b[^>]*>[\s\S]*?<\/(?:h[1-5]|p|figcaption|caption)>/gi) || [];
-  return textEvidence(blocks.map(clean));
+  return textEvidence(htmlBlocks(main));
+}
+
+function htmlBlocks(html) {
+  const blocks = html.match(/<(?:h[1-5]|p|figcaption|caption)\b[^>]*>[\s\S]*?<\/(?:h[1-5]|p|figcaption|caption)>/gi) || [];
+  return blocks.map(clean);
 }
 
 function textEvidence(parts) {
@@ -158,20 +162,38 @@ async function evidence(candidate) {
 }
 
 export async function publishedEvidence(candidate, env) {
-  const html = await (await source(candidate.paperUrl, 'text/html')).text();
-  const verified = readPublication(html, candidate);
-  const pdf = await downloadPdf(verified.pdf);
-  const [converted] = await env.AI.toMarkdown([{ name: 'paper.pdf', blob: pdf }]);
-  if (typeof converted?.data !== 'string') throw new Error('PDF conversion failed');
-  const { body, conclusion, closingLabel, abstract: pdfAbstract } = readPdfText(converted.data);
-  const abstract = verified.abstract || pdfAbstract;
-  const published = candidate.publisher === 'jmlr' && verified.published.length === 4 ?
-    jmlrMonth(converted.data, verified.published) : verified.published;
-  if (!published) throw new Error('JMLR publication month missing from official PDF');
+  const html = candidate.publisher === 'springer' ? await springerPage(candidate.paperUrl) :
+    await (await source(candidate.paperUrl, 'text/html')).text();
+  let verified;
+  let extracted;
+  if (candidate.publisher === 'springer') {
+    verified = readSpringerPublication(html, candidate);
+    extracted = readSpringerText(html);
+  } else {
+    verified = readPublication(html, candidate);
+    const pdf = await downloadPdf(verified.pdf);
+    const [converted] = await env.AI.toMarkdown([{ name: 'paper.pdf', blob: pdf }]);
+    if (typeof converted?.data !== 'string') throw new Error('PDF conversion failed');
+    extracted = readPdfText(converted.data);
+    if (candidate.publisher === 'jmlr' && verified.published.length === 4) {
+      verified.published = jmlrMonth(converted.data, verified.published);
+      if (!verified.published) throw new Error('JMLR publication month missing from official PDF');
+    }
+  }
+  const { body, conclusion, closingLabel } = extracted;
+  const abstract = verified.abstract || extracted.abstract;
   if (!abstract || abstract.length < 120 || excluded.test(verified.title + ' ' + abstract)) {
     throw new Error('No eligible primary abstract in publisher paper');
   }
-  return { candidate: { ...verified, abstract, published }, evidence: { body, conclusion, closingLabel, institutions: [] } };
+  return { candidate: { ...verified, abstract }, evidence: { body, conclusion, closingLabel, institutions: [] } };
+}
+
+export function readSpringerText(html) {
+  const start = html.search(/<section\b[^>]*\bdata-title="Abstract"[^>]*>/i);
+  if (start < 0) throw new Error('Springer article abstract missing');
+  const article = html.slice(start, start + 950_000).split(/<section\b[^>]*(?:aria-labelledby="(?:Bib\d+|Ack\d+|author-information)"|data-title="(?:References|Acknowledgements)")/i, 1)[0];
+  const abstract = htmlBlocks(article.split('</section>', 1)[0]).slice(1).join(' ');
+  return { ...textEvidence(htmlBlocks(article)), abstract };
 }
 
 export function jmlrMonth(text, year) {
