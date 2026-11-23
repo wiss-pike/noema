@@ -4,3 +4,6 @@ exclude:
   - TODAY.md
   - AUDIT.md
   - publish_daily.py
+  - build_static.py
+  - prepare_cloudflare_daily.py
+  - CHANGELOG.md
