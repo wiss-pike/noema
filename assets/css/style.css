@@ -1311,7 +1311,7 @@ button { font: inherit; color: inherit; }
   .archive-head { gap: 14px; }
 }
 
-/* Keep reading controls within reach on narrow and notched screens. */
+/* Mobile reading controls and safe areas. */
 body {
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
@@ -1346,6 +1346,7 @@ body {
   }
 }
 @media (max-width: 1080px) {
+  html { scroll-behavior: auto; }
   .toc-inline { padding: 0; }
   .toc-inline summary { min-height: 44px; align-items: center; }
   .toc-inline summary::before { content: "+"; font-size: 18px; }
