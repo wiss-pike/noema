@@ -1,0 +1,128 @@
+{
+  "date": "2026-11-23",
+  "window": "2026-11-22 08:00 — 次日 08:00（北京时间）",
+  "lead": "AI 的两端同时出现拐点：一端是 OpenAI 首席科学家首次公开自家预训练困惑度曲线，提议全行业以它为共同标尺约定「研发上限」；另一端是 MiniMax 用内部模型把多项停留在论文里的密码攻击推进到秒级可执行，AI4S 从「分析数据」走到「产出可验证结果」。产业侧，马斯克警告 2027 年 AI 行业或现数千亿美元量级的资金荒，而中国大模型周调用量已连续 30 周居全球第一。时事两条：韩国教育部长因高考 AI 作弊防控混乱辞职，俄海军「水星号」护卫舰在利比亚班加西港被无人艇击沉。",
+  "note": "覆盖 2026-11-22 08:00 至 2026-11-23 08:00（北京时间）。与 11-22 期不重复：黎曼猜想核验、Thinking Machines 开源、OpenRouter 数据泄露、联合国自主武器谈判、美伊与俄乌波兰领空等已在上一期收录。",
+  "entries": [
+    {
+      "title": "OpenAI 首次公开预训练困惑度曲线，首席科学家提议全行业约定「研发上限」",
+      "category": "AI",
+      "points": [
+        "11-22，OpenAI 首席科学家 Jakub Pachocki 发布长文《Perplexity and Intelligence》，首次公开自家模型在固定内部代码集上的对数困惑度（perplexity，越低表示预测下一个 token 越准）：GPT-3.5 约 0.99、GPT-4 约 0.91；降到 0.8 以下开始出现网络安全与数学领域的突破性能力，约 0.76 时已能接连解出长期悬置的数学问题。",
+        "他提议各家前沿实验室以困惑度等指标约定共同门槛：在监控与审计能力达到某个里程碑之前不越过这条线，并统一评测方法、透明度与首次上线前的红队测试标准。这是提议，不是已经生效的行业标准。",
+        "OpenAI CEO Sam Altman 称这篇文章是公司近期最重要的发布。",
+        "口径差异：路透等外网媒体把重点放在「给研发设速限」的治理含义与 Altman 背书的信号；国内财经与科技媒体更关注 OpenAI 主动公开了竞争对手一直想知道的数据，以及 2027 年前后可能再来一次能力跃升。"
+      ],
+      "sources": [
+        {
+          "label": "TechCrunch",
+          "url": "https://techcrunch.com/2026/11/22/openais-chief-scientist-has-thoughts-on-how-to-limit-ai-development/"
+        },
+        {
+          "label": "Reuters（The Star 转载）",
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/11/23/openai-scientist-proposes-industry-ai-limits-tied-to-model-intelligence-metric"
+        },
+        {
+          "label": "新浪财经",
+          "url": "https://finance.sina.com.cn/tech/roll/2026-11-23/doc-inizskhk5580620.shtml"
+        }
+      ]
+    },
+    {
+      "title": "MiniMax 内部模型 MIM 自动化密码分析：Waterfall-256 首个实用碰撞 0.045 秒，LOCKER 约 2 秒恢复密钥",
+      "category": "AI",
+      "points": [
+        "11-22 晚，MiniMax 公布内部研究模型 MIM 的密码分析结果：SHA-3 历史候选算法 Waterfall-256 的首个实用碰撞攻击，单核 0.045 秒找到碰撞；后量子候选 LOCKER 约 2 秒恢复共享密钥；TII 恢复 94 个私钥，并解出 55 个此前没有公开解的 McEliece 挑战集。",
+        "研究针对的是学术设计、历史竞赛候选与公开挑战参数，不影响已部署的现网加密标准——MiniMax 同时强调了这一点。",
+        "值得注意：密码分析没有模糊地带，破解脚本要么还原目标密钥要么失败，可解释空间极小。这恰好是检验大模型「多步数学推导 + 把推导写成可运行代码」最硬的场景，也标志着 AI4S 从检索资料、分析数据，走到产出可验证的研究结果。"
+      ],
+      "sources": [
+        {
+          "label": "上海证券报",
+          "url": "https://www.cnstock.com/commonDetail/831980"
+        },
+        {
+          "label": "36氪",
+          "url": "https://36kr.com/p/4081531539723397"
+        },
+        {
+          "label": "解放日报",
+          "url": "https://www.jfdaily.com/staticsg/res/html/web/newsDetail.html?id=1218477&sid=11"
+        }
+      ]
+    },
+    {
+      "title": "马斯克警告：2027 年 AI 行业或现严重「资金荒」，仅营运资金就要多投数千亿美元",
+      "category": "AI",
+      "points": [
+        "11-22，马斯克在 X 上回应 Keras 作者 François Chollet 时表示，AI 的瓶颈不是需求而是物理执行——让如此大规模的算力通电、冷却并稳定运行极其困难；即使从支付算力费用到稳定创收只延迟几个月，全行业也需要数千亿美元的额外营运资金，他反问「这些钱从哪里来」。",
+        "他引用的行业数据：IDC 称 2026 年二季度全球 AI 基础设施支出 1214 亿美元、同比增长 53%，全年预测上调至 5210 亿美元；国际能源署称五大科技公司 2025 年资本支出超 4000 亿美元，2026 年预计再增 75%。",
+        "值得注意：同一周英伟达因会计问题被美国证监会审查、股价周五单日跌 14%，市场正在给「远期盈利占比高」的 AI 资产重新定价——融资成本一抬，最先出问题的是靠债务堆起来的算力项目。"
+      ],
+      "sources": [
+        {
+          "label": "财联社",
+          "url": "https://www.cls.cn/detail/2541109"
+        },
+        {
+          "label": "新浪财经（财联社转载）",
+          "url": "https://finance.sina.com.cn/roll/2026-11-23/doc-inizsqqn8367155.shtml"
+        }
+      ]
+    },
+    {
+      "title": "中国大模型周调用量连续 30 周全球第一：210 万亿 token 里中国占 111 万亿",
+      "category": "AI",
+      "points": [
+        "11-16 至 11-22，全球 AI 大模型总调用量 210 万亿 token、环比增长 8.25%；其中中国模型 111.16 万亿 token，美国模型 19.21 万亿 token（每日经济新闻据 OpenRouter 最新数据测算）。",
+        "调用量前五里有四款中国模型：DeepSeek V4.1-Flash-1017 以 65 万亿 token 连续五周第一，DeepSeek V4.1 Flash、智谱 GLM 5.3 Flash、腾讯混元 Hy4 flash 分列二至四位；小米 MiMo-V2.6-Flash 环比涨 461% 回到第七。",
+        "值得注意：调用量不等于能力，但它是「谁在真正被用」的近似指标。国产开源模型靠低价和本地部署拿下的份额，正在改变开发者选模型的默认答案。"
+      ],
+      "sources": [
+        {
+          "label": "每日经济新闻",
+          "url": "https://www.mrjjxw.com/articles/2026-11-23/4655481.html"
+        }
+      ]
+    },
+    {
+      "title": "韩国高考 AI 作弊防控引发混乱，教育部长崔教振辞职",
+      "category": "时事",
+      "points": [
+        "11-22，韩国教育部长官崔教振辞职，为 11-19 举行的 2027 学年度大学修学能力考试（韩国高考）期间防范高科技作弊措施不足造成的混乱负责；总统李在明在一小时内接受辞呈，并下令全面审查国家考试管理与相关法律。",
+        "这场 8 小时考试约有 55 万人报名。当局限制 Wi-Fi、检查眼镜与衣扣、在全国发出紧急手机警报以排查藏匿的手机，共查出 111 名违规携带电子设备的考生。",
+        "导火索是一名在全国税务师考试中考出 397.5 分（满分 400）的「状元」11-15 自首，承认用微型摄像头拍题、再交给 AI 生成答案；李在明 21 日表示，举报作弊可获 1 亿韩元（约 49 万元人民币）奖金，作弊是与公职人员腐败同等严重的犯罪。",
+        "口径差异：路透等着重「最后关头的措施引发混乱、部长称因年龄难以识别 AI 作弊」；国内媒体更聚焦 AI 作弊倒逼高考改革，以及「公平原则不能让步」的表态。"
+      ],
+      "sources": [
+        {
+          "label": "Reuters（AsiaOne 转载）",
+          "url": "https://www.asiaone.com/asia/south-koreas-education-minister-quits-over-ai-exam-cheating-chaos"
+        },
+        {
+          "label": "中国新闻网",
+          "url": "https://www.chinanews.com/gj/2026/11-23/10736272.shtml"
+        }
+      ]
+    },
+    {
+      "title": "俄海军「水星号」护卫舰在利比亚班加西港被无人艇击沉",
+      "category": "时事",
+      "points": [
+        "11-22 凌晨，停靠利比亚班加西海军基地补给的俄罗斯海军小型护卫舰「水星号」（Merkury）遭疑似乌克兰海上无人艇袭击：至少 4 艘被拦截，2 艘命中舰身，剧烈爆炸后沉没。利比亚东部政府称初步调查指向无人机袭击，有人员受伤、无死亡报告，目前无人认领。",
+        "袭击点距乌克兰南部海岸超过 1600 公里，卫星图像显示该舰已沉没——在几乎没有海军的情况下，乌方把无人艇与导弹的组合打到了地中海。",
+        "值得注意：这是俄乌战火在地理上最直接的一次外溢，也说明廉价无人艇正在改写「谁能在海上投射力量」的算法。"
+      ],
+      "sources": [
+        {
+          "label": "Reuters（The Star 转载）",
+          "url": "https://www.thestar.com.my/news/world/2026/11/23/libya039s-eastern-government-suspects-drone-attack-caused-explosion-on-russian-ship"
+        },
+        {
+          "label": "中央社",
+          "url": "https://www.cna.com.tw/news/aopl/202611230020.aspx"
+        }
+      ]
+    }
+  ]
+}
