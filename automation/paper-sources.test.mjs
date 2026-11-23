@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { readAcl, readPmlrVolume, readPublication } from './paper-sources.mjs';
-import { readPdfText, repeated } from './papers.mjs';
+import { readAcl, readInterspeech, readJmlr, readPmlrVolume, readPublication } from './paper-sources.mjs';
+import { jmlrMonth, readPdfText, repeated } from './papers.mjs';
 
 const period = { from: '2026-08-23', to: '2026-11-23' };
 
@@ -61,4 +61,39 @@ test('PDF evidence locates headings glued to body text and drops references', ()
   assert.match(paper.body, /80% accuracy/);
   assert.match(paper.conclusion, /^The benchmark supports/);
   assert.doesNotMatch(paper.conclusion, /A previous paper/);
+  assert.equal(paper.closingLabel, '结论');
+  const discussion = readPdfText(fixture.replace('6 Conclusion', '6. Discussion'));
+  assert.equal(discussion.closingLabel, '讨论');
+  assert.match(discussion.conclusion, /^The benchmark supports/);
+});
+
+test('JMLR uses the month in the publisher PDF rather than guessing from an RSS year', () => {
+  const feed = '<item><title>Grounded Reasoning in Neural Networks</title>' +
+    '<link>http://jmlr.org/papers/v27/25-1670.html</link><pubDate>2026</pubDate>' +
+    '<author>First Author</author><description>Abstract from the journal feed.</description></item>';
+  const [paper] = readJmlr(feed, period);
+  assert.equal(paper.id, 'jmlr:27/25-1670');
+  assert.equal(paper.published, '2026');
+  const meta = '<head><meta name="citation_title" content="Grounded Reasoning in Neural Networks">' +
+    '<meta name="citation_author" content="First Author"><meta name="citation_publication_date" content="2026">' +
+    '<meta name="citation_pdf_url" content="http://jmlr.org/papers/volume27/25-1670/25-1670.pdf"></head>';
+  assert.equal(readPublication(meta, paper).pdf, 'https://jmlr.org/papers/volume27/25-1670/25-1670.pdf');
+  assert.equal(jmlrMonth('### Page 1\nSubmitted 07/25; Published 10/26\n', '2026'), '2026-10');
+  assert.equal(jmlrMonth('### Page 1\nSubmitted 07/25; Published 10/25\n', '2026'), '');
+  assert.equal(jmlrMonth('### Page 1\nNo date.\n### Page 2\nPublished 10/26', '2026'), '');
+});
+
+test('Interspeech uses the proceedings dates and accepts only its linked paper PDF', () => {
+  const issue = '<h5 class="w3-text w3-center">Sydney, Australia<br>27 September - 1 October 2026</h5>' +
+    '<!-- Sessions --><div class="paper-type-regular"><a class="w3-text" href="example26_interspeech.html">' +
+    '<p><span>Speech Reasoning with Audio Models</span><br><span class="w3-text">First Author</span>';
+  const [paper] = readInterspeech(issue, '2026', period);
+  assert.equal(paper.id, 'isca:2026/example26_interspeech');
+  assert.equal(paper.published, '2026-09-27');
+  assert.deepEqual(readInterspeech(issue, '2026', { from: '2026-10-01', to: '2026-11-23' }), []);
+  const meta = '<head><meta name="citation_title" content="Speech Reasoning with Audio Models">' +
+    '<meta name="citation_author" content="First Author"><meta name="citation_publication_date" content="2026">' +
+    '<meta name="citation_pdf_url" content="https://www.isca-archive.org/interspeech_2026/example26_interspeech.pdf"></head>';
+  assert.equal(readPublication(meta, paper).published, '2026-09-27');
+  assert.throws(() => readPublication(meta.replace('example26_interspeech.pdf', 'other26_interspeech.pdf'), paper), /unverified/);
 });

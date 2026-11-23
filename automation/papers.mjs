@@ -76,13 +76,19 @@ function paperText(html) {
 function textEvidence(parts) {
   parts = parts.filter(Boolean);
   const text = parts.join('\n');
-  const conclusionAt = parts.findIndex(part => /^(?:\d+(?:\.\d+)*\s+)?Conclusions?(?: and .*)?$/i.test(part));
-  const conclusion = conclusionAt < 0 ? '' : parts.slice(conclusionAt + 1, conclusionAt + 4).join('\n').slice(0, 3800);
+  const conclusionAt = parts.findLastIndex(part => /^(?:\d+(?:\.\d+)*\s+)?(?:Conclusions?(?: and .*)?|Concluding Remarks)$/i.test(part));
+  const discussionAt = parts.findLastIndex(part => /^(?:\d+(?:\.\d+)*\s+)?(?:Discussion|Summary and Discussion)$/i.test(part));
+  const closingAt = conclusionAt >= 0 ? conclusionAt : discussionAt;
+  const closingLabel = conclusionAt >= 0 ? '结论' : '讨论';
+  const after = parts.slice(closingAt + 1, closingAt + 4);
+  const nextHeading = after.findIndex(part => /^(?:\d+\s+\w+(?:[ \t]+\w+){0,7}|acknowledg(?:e)?ments|references|appendix.*)$/i.test(part));
+  const conclusion = closingAt < 0 ? '' :
+    (nextHeading < 0 ? after : after.slice(0, nextHeading)).join('\n').slice(0, 3800);
   if (text.length < 3500 || !conclusion) throw new Error('No readable body and conclusion');
-  if (text.length <= 21500) return { body: text, conclusion };
+  if (text.length <= 21500) return { body: text, conclusion, closingLabel };
   const experiment = parts.findIndex(part => part.length < 140 && /\b(experiments?|evaluation|results)\b/i.test(part));
   const middle = experiment < 0 ? text.slice(8000, 15300) : parts.slice(experiment).join('\n').slice(0, 7300);
-  return { body: text.slice(0, 8000) + '\n' + middle + '\n' + conclusion, conclusion };
+  return { body: text.slice(0, 8000) + '\n' + middle + '\n' + conclusion, conclusion, closingLabel };
 }
 
 function projectUrl(candidate, html) {
@@ -129,7 +135,7 @@ async function evidence(candidate) {
   const fullText = 'https://arxiv.org/html/' + verified.version;
   const response = await source(fullText, 'text/html');
   const html = await response.text();
-  const { body, conclusion } = paperText(html.slice(0, 1_200_000));
+  const { body, conclusion, closingLabel } = paperText(html.slice(0, 1_200_000));
   const front = html.split(/class="ltx_abstract"/, 1)[0].slice(-12000);
   const institutions = Array.from(front.matchAll(/class="ltx_contact ltx_role_affiliation"[^>]*>[\s\S]*?<\/span>([^<]+)<\/span>/g),
     match => clean(match[1])).filter(Boolean);
@@ -148,7 +154,7 @@ async function evidence(candidate) {
       // The paper remains eligible if a linked project page is unavailable.
     }
   }
-  return { candidate: verified, evidence: { fullText, body, conclusion, institutions: Array.from(new Set(institutions)), blog } };
+  return { candidate: verified, evidence: { fullText, body, conclusion, closingLabel, institutions: Array.from(new Set(institutions)), blog } };
 }
 
 export async function publishedEvidence(candidate, env) {
@@ -157,19 +163,29 @@ export async function publishedEvidence(candidate, env) {
   const pdf = await downloadPdf(verified.pdf);
   const [converted] = await env.AI.toMarkdown([{ name: 'paper.pdf', blob: pdf }]);
   if (typeof converted?.data !== 'string') throw new Error('PDF conversion failed');
-  const { body, conclusion, abstract: pdfAbstract } = readPdfText(converted.data);
+  const { body, conclusion, closingLabel, abstract: pdfAbstract } = readPdfText(converted.data);
   const abstract = verified.abstract || pdfAbstract;
+  const published = candidate.publisher === 'jmlr' && verified.published.length === 4 ?
+    jmlrMonth(converted.data, verified.published) : verified.published;
+  if (!published) throw new Error('JMLR publication month missing from official PDF');
   if (!abstract || abstract.length < 120 || excluded.test(verified.title + ' ' + abstract)) {
     throw new Error('No eligible primary abstract in publisher paper');
   }
-  return { candidate: { ...verified, abstract }, evidence: { body, conclusion, institutions: [] } };
+  return { candidate: { ...verified, abstract, published }, evidence: { body, conclusion, closingLabel, institutions: [] } };
+}
+
+export function jmlrMonth(text, year) {
+  const firstPage = text.split(/^### Page 2\s*$/m, 1)[0].slice(0, 4500);
+  const publication = firstPage.match(/\bPublished\s+(0?[1-9]|1[0-2])\s*\/\s*(\d{4}|\d{2})(?!\d)/i);
+  if (!publication || ![year, year.slice(2)].includes(publication[2])) return '';
+  return year + '-' + publication[1].padStart(2, '0');
 }
 
 export function readPdfText(raw) {
   const text = raw.slice(0, 150_000).split(/^## Contents\s*$/m).pop().replace(/\r\n/g, '\n')
     .replace(/^#{1,6}\s*Page\s+\d+\s*$/gm, '')
     .replace(/([.!?])(?=[A-Z][a-z])/g, '$1 ')
-    .replace(/(?<!\d)(\d{1,2})[. \t]+(Introduction|(?:Experimental\s+)?Results|Experiments|Evaluation|Discussion|Conclusions?)(?=\s|[A-Z]|$)/g,
+    .replace(/(?<!\d)(\d{1,2})[. \t]+(Introduction|(?:Experimental\s+)?Results|Experiments|Evaluation|(?:Summary and )?Discussion|Conclusions?(?: and (?:Future Work|Discussion))?|Concluding Remarks)(?=\s|[A-Z]|$)/g,
       '\n\n$1 $2\n\n')
     .replace(/(^|[.!?])\s*References(?=\s|\[|[A-Z])/g, '$1\n\nReferences\n\n');
   const parts = text.split(/\n\s*\n/).map(block => clean(block.replace(/^[#*_\s]+|[*_]+$/g, ''))).filter(Boolean);
@@ -249,6 +265,7 @@ export function makePaper(result, candidate, evidence, week) {
   const quote = checkedQuote(result.abstractQuote, candidate.abstract);
   const finalText = clean(evidence.conclusion);
   const conclusion = checkedQuote(result.conclusionQuote, finalText);
+  const closingLabel = evidence.closingLabel || '结论';
   if (!(quote || excerpt(candidate.abstract)) || !(conclusion || excerpt(finalText))) {
     throw new Error('Missing original-language citations');
   }
@@ -270,9 +287,10 @@ export function makePaper(result, candidate, evidence, week) {
     '本期未找到可核验的作者长文或项目解读，以下基于论文全文与摘要。';
   const body = [
     heading(sections[0]), ...content[0].map(para), para(note),
-    heading('论文摘要与结论原句'),
+    heading('论文摘要与' + closingLabel + '原句'),
     citation(quote || excerpt(candidate.abstract), quote && result.abstractNote ? '摘要 · ' + clean(result.abstractNote) : '论文摘要原句'),
-    citation(conclusion || excerpt(finalText), conclusion && result.conclusionNote ? '结论 · ' + clean(result.conclusionNote) : '论文结论原句'),
+    citation(conclusion || excerpt(finalText), conclusion && result.conclusionNote ?
+      closingLabel + ' · ' + clean(result.conclusionNote) : '论文' + closingLabel + '原句'),
     ...(authorPoints.length ? [heading('作者团队怎么说'), ...authorPoints.map(point => citation(point.quote, point.note))] : []),
   ];
   for (const [index, section] of sections.entries()) {
@@ -288,7 +306,7 @@ export function makePaper(result, candidate, evidence, week) {
     date: week, month: week.slice(0, 7), direction: result.direction,
     titleZh: titleZh.slice(0, 180), titleEn: candidate.title,
     authors: candidate.authors.map(author => author.affiliation ? author.name + '（' + author.affiliation + '）' : author.name).join('、'),
-    venue: candidate.venue + ' · ' + candidate.published,
+    venue: candidate.venue + ' · ' + candidate.published + (candidate.publisher === 'isca' ? '（会议开幕）' : ''),
     tags: list(result.tags).map(clean).filter(Boolean).slice(0, 4).map(tag => tag.slice(0, 24)),
     readTime: '约 ' + minutes + ' 分钟', oneLine: oneLine.slice(0, 220),
     links: {
