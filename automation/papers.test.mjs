@@ -43,14 +43,17 @@ test('weekly paper preserves primary metadata and versioned full text links', ()
   assert.ok(paper.body.some(block => block.text.includes('未找到可核验')));
 });
 
-test('weekly paper rejects altered numbers, unverified author quotes, and inaccurate excerpts', () => {
+test('weekly paper removes altered numbers and unverified author quotes, and replaces inaccurate excerpts', () => {
   const changedNumber = draft();
   changedNumber.sections[3].push('另一组提高了25%。');
-  assert.throws(() => makePaper(changedNumber, candidate, proof, '2026-11-23'), /Experiment numbers/);
-  assert.throws(() => makePaper(draft(), candidate, { ...proof, blog: { text: 'No matching quotes' } }, '2026-11-23'),
-    /project page accurately/);
-  assert.throws(() => makePaper({ ...draft(), conclusionQuote: 'visual reasoning is solved' },
-    candidate, proof, '2026-11-23'), /original-language/);
+  const corrected = makePaper(changedNumber, candidate, proof, '2026-11-23');
+  assert.ok(!JSON.stringify(corrected.body).includes('25%'));
+  const unverified = { ...draft(), authorPoints: [{ quote: 'This fabricated project quote', note: '测试' }] };
+  const withBlog = makePaper(unverified, candidate, { ...proof, blog: { text: 'No matching quotes' } }, '2026-11-23');
+  assert.ok(!JSON.stringify(withBlog.body).includes('fabricated'));
+  const replacement = makePaper({ ...draft(), abstractQuote: 'visual reasoning is solved' },
+    candidate, proof, '2026-11-23');
+  assert.ok(replacement.body.some(block => block.text === candidate.abstract));
 });
 
 test('review format preserves multiple paragraphs and keeps metadata out of the prose', () => {

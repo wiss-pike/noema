@@ -170,6 +170,11 @@ function checkedQuote(value, corpus) {
   return corpus.includes(quote) ? quote : '';
 }
 
+function excerpt(corpus) {
+  const passage = corpus.split(/(?<=[.!?])\s+/).find(sentence => sentence.split(' ').length >= 4);
+  return passage?.split(' ').slice(0, 7).join(' ') || '';
+}
+
 function numbers(text) {
   return text.replace(/(\d)\s+%/g, '$1%').match(/\d+(?:[.,]\d+)?%?/g) || [];
 }
@@ -222,11 +227,15 @@ export function makePaper(result, candidate, evidence, week) {
   const available = new Set(numbers(experiment));
   const cited = numbers(content[3].join(' '));
   if (cited.some(number => !available.has(number))) {
-    throw new Error('Experiment numbers differ from cited evidence');
+    content[3] = content[3].filter(paragraph => numbers(paragraph).every(number => available.has(number)));
   }
+  if (content.flat().join('').length < 1500) throw new Error('Review is too short after removing unsupported experiment claims');
   const quote = checkedQuote(result.abstractQuote, candidate.abstract);
-  const conclusion = checkedQuote(result.conclusionQuote, clean(evidence.conclusion));
-  if (!quote || !conclusion) throw new Error('Missing original-language citations');
+  const finalText = clean(evidence.conclusion);
+  const conclusion = checkedQuote(result.conclusionQuote, finalText);
+  if (!(quote || excerpt(candidate.abstract)) || !(conclusion || excerpt(finalText))) {
+    throw new Error('Missing original-language citations');
+  }
   const words = experiment.split(' ');
   const numberAt = words.findIndex(word => /\d+[.,%×]|\d+x\b/.test(word));
   const firstWord = Math.max(0, (numberAt < 0 ? words.findIndex(word => /\d/.test(word)) : numberAt) - 2);
@@ -235,19 +244,19 @@ export function makePaper(result, candidate, evidence, week) {
   const heading = text => ({ t: 'h', text });
   const para = text => ({ t: 'p', text });
   const citation = (text, note) => ({ t: 'quote', text, note });
-  const note = evidence.blog ?
-    '原文链接指向作者团队项目页。下列要点来自该页，其余分析见正文。' :
-    '本期未找到可核验的作者长文或项目解读，以下基于论文全文与摘要。';
   const authorPoints = evidence.blog ? list(result.authorPoints).map(point => ({
     quote: checkedQuote(point?.quote, evidence.blog.text),
     note: clean(point?.note),
-  })).filter(point => point.quote && point.note).slice(0, 3) : [];
-  if (evidence.blog && authorPoints.length < 3) throw new Error('Could not cite the project page accurately');
+  })).filter((point, index, all) => point.quote && point.note &&
+    all.findIndex(other => other.quote === point.quote) === index).slice(0, 3) : [];
+  const note = evidence.blog ?
+    (authorPoints.length ? '作者解读部分标出可核实的项目页引文。' : '可从文末链接打开作者项目页。本期正文基于论文全文与摘要。') :
+    '本期未找到可核验的作者长文或项目解读，以下基于论文全文与摘要。';
   const body = [
     heading(sections[0]), ...content[0].map(para), para(note),
     heading('论文摘要与结论原句'),
-    citation(quote, '摘要 · ' + clean(result.abstractNote)),
-    citation(conclusion, '结论 · ' + clean(result.conclusionNote)),
+    citation(quote || excerpt(candidate.abstract), quote && result.abstractNote ? '摘要 · ' + clean(result.abstractNote) : '论文摘要原句'),
+    citation(conclusion || excerpt(finalText), conclusion && result.conclusionNote ? '结论 · ' + clean(result.conclusionNote) : '论文结论原句'),
     ...(authorPoints.length ? [heading('作者团队怎么说'), ...authorPoints.map(point => citation(point.quote, point.note))] : []),
   ];
   for (const [index, section] of sections.entries()) {
@@ -307,6 +316,23 @@ async function findCandidates(now, previous) {
   });
   const discovered = new Map(community.map(paper => [paper.id, paper]));
   for (const paper of fallback) discovered.set(paper.id, { ...discovered.get(paper.id), ...paper });
+  if (discovered.size < 6) {
+    try {
+      const rss = await (await source('https://rss.arxiv.org/rss/cs.AI+cs.CL+cs.LG', 'application/rss+xml')).text();
+      for (const [, block] of rss.matchAll(/<item>([\s\S]*?)<\/item>/gi)) {
+        const id = arxivId(clean(block.match(/<link>([^<]*)<\/link>/i)?.[1]));
+        const title = clean(block.match(/<title>([\s\S]*?)<\/title>/i)?.[1]);
+        const abstract = clean(block.match(/<description>([\s\S]*?)<\/description>/i)?.[1]);
+        if (id && title && abstract && !discovered.has(id)) {
+          discovered.set(id, { id, title, abstract, published: date(0), authors: [], comment: '',
+            venue: 'arXiv:' + id + '（预印本）' });
+        }
+        if (discovered.size >= 16) break;
+      }
+    } catch (error) {
+      console.warn('arXiv RSS discovery unavailable', String(error));
+    }
+  }
   const candidates = new Map();
   for (const paper of discovered.values()) {
     if (paper.published < date(92) || paper.published > date(0) || archived.has(paper.id) ||
@@ -329,7 +355,11 @@ export async function collectPaper(env, now) {
   const chosen = list(rank?.ids).slice(0, 6).map(id => candidates.find(paper => paper.id === id)).filter(Boolean);
   const verified = await Promise.allSettled(Array.from(new Set(chosen)).slice(0, 4).map(evidence));
   const readable = verified.flatMap(result => {
-    if (result.status === 'fulfilled') return repeated(result.value.candidate, previous) ? [] : [result.value];
+    if (result.status === 'fulfilled') {
+      const paper = result.value.candidate;
+      const age = now - Date.parse(paper.published);
+      return repeated(paper, previous) || age < 0 || age > 93 * DAY ? [] : [result.value];
+    }
     console.warn('Primary paper text unavailable', String(result.reason));
     return [];
   });
