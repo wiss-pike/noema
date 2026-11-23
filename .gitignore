@@ -1,1 +1,4 @@
 __pycache__/
+automation/node_modules/
+automation/.wrangler/
+automation/pages/public/

@@ -27,3 +27,7 @@ Noema 收录 AI 论文精读、每日简报和每周回顾。首页展示最近�
 ## 发布一份日报
 
 先运行 `python publish_daily.py edition.json --check` 检查日期、正文结构与来源链接。已通过 GitHub CLI 登录且拥有本仓库写权限的环境，可运行 `python publish_daily.py edition.json`。同日期相同内容会跳过提交，修订使用 GitHub 返回的文件版本核对并发写入。
+
+## 内置自动简报（待部署）
+
+[实现、测试与 Cloudflare 部署说明](automation/README.md)。

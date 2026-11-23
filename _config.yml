@@ -7,3 +7,4 @@ exclude:
   - build_static.py
   - prepare_cloudflare_daily.py
   - CHANGELOG.md
+  - automation

@@ -1,0 +1,15 @@
+name = "noema-briefing"
+main = "worker.mjs"
+compatibility_date = "2026-11-23"
+workers_dev = false
+preview_urls = false
+
+[ai]
+binding = "AI"
+
+[triggers]
+crons = ["0 0 * * *"]
+
+[[d1_databases]]
+binding = "ARCHIVE"
+database_name = "noema-editions"

@@ -1,0 +1,19 @@
+# Noema 自动简报
+
+这套代码使用 Cloudflare 的定时 Worker 收集过去 24 小时的公开 RSS，由 Workers AI 生成中文稿，并写入 D1。Pages 通过服务绑定读取已发布日报。生产启用后，抓取、存储和网页读取都在 Cloudflare 上完成。
+
+每天北京时间 08:00 对应 Cron `0 0 * * *`。每期最多 8 条，其中至少一半是 AI 条目，至少三分之二以外媒或海外一手来源为主，至少一半以外媒为主。新闻链接从 RSS 记录保留，模型只返回候选条目编号和中文文案。缺少足够来源时少发，无法生成合规一期时保留既有日报。内容仍需要实际运行后评估摘要质量。
+
+## 测试
+
+在本目录运行 `npm ci` 和 `npm test`。测试覆盖日期窗口、链接与来源比例、重复运行不重复写稿、日报接口。模拟模型回复用于验证数据与程序行为。
+
+## 接入现有 Pages 项目
+
+1. 用已获授权的 Wrangler 创建 D1 数据库 `noema-editions`。把返回的 `database_id` 填入本目录的 `wrangler.toml`，运行 `wrangler d1 migrations apply noema-editions --remote`。
+2. 从本目录运行 `wrangler deploy`。这是用于内部服务调用和定时发布的 Worker。
+3. 从仓库根目录运行 `python build_static.py automation/pages/public --with-briefing`，生成供首次发布的全新输出目录。若目录已存在，可先备份后另建输出目录，同步修改 Pages 配置中的构建目录。
+4. 从 `automation/pages` 运行 `wrangler pages deploy --project-name noema-wiss --branch main`。Pages 会在站内路径 `/api/daily` 读取 Worker 的发布结果。
+5. 确认真实运行能获得 RSS、生成通过校验的中文日报、写入 D1，并在公开首页和日报详情中读到。测试通过后再调整 Today 的在用任务。
+
+平台额度与真实首个定时任务尚待部署后验证。开启 Worker 之前，现有站点继续使用静态档案。接口超时或失败时，页面仍能读取随站点发布的历史档案。
