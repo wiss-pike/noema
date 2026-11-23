@@ -43,6 +43,20 @@ test('weekly paper preserves primary metadata and versioned full text links', ()
   assert.ok(paper.body.some(block => block.text.includes('未找到可核验')));
 });
 
+test('publisher reviews link to the official paper and PDF', () => {
+  const publisher = {
+    ...candidate, id: 'acl:2026.emnlp-main.45', publisher: 'acl',
+    paperUrl: 'https://aclanthology.org/2026.emnlp-main.45/',
+    pdf: 'https://aclanthology.org/2026.emnlp-main.45.pdf',
+    venue: 'EMNLP',
+  };
+  const { fullText, ...pdfProof } = proof;
+  const paper = makePaper(draft(), publisher, pdfProof, '2026-11-23');
+  assert.equal(paper.id, '2026-11-23-acl-2026.emnlp-main.45');
+  assert.deepEqual(paper.links, { paper: publisher.paperUrl, pdf: publisher.pdf });
+  assert.match(paper.venue, /^EMNLP/);
+});
+
 test('weekly paper removes altered numbers and unverified author quotes, and replaces inaccurate excerpts', () => {
   const changedNumber = draft();
   changedNumber.sections[3].push('另一组提高了25%。');
