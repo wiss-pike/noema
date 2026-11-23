@@ -117,7 +117,7 @@
     const latest = DATA.papers.slice().sort(byDate)[0];
     if (latest) {
       $('feature-title').textContent = latest.titleZh;
-      $('feature-date').textContent = latest.date.replaceAll('-', '.');
+      $('feature-date').textContent = latest.date.replace(/-/g, '.');
       $('feature-date').dateTime = latest.date;
       $('cover-feature').href = monthHref(latest.month) + '#p-' + encodeURIComponent(latest.id);
     }
@@ -125,7 +125,7 @@
       const day = archive.items[0];
       if (!day) return;
       $('latest-day').href = 'daily.html?d=' + encodeURIComponent(day.date);
-      $('latest-headline').textContent = day.entries[0]?.title || day.lead || day.date;
+      $('latest-headline').textContent = (day.entries[0] && day.entries[0].title) || day.lead || day.date;
     }).catch(function () { /* The static link still opens the daily archive. */ });
   }
 
@@ -451,6 +451,15 @@
         renderChips();
         bind();
         render();
+        if (monthPage && window.location.hash) {
+          var target;
+          try {
+            target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+          } catch (error) {
+            // Malformed fragments can be ignored.
+          }
+          if (target) target.scrollIntoView();
+        }
       })
       .catch(fail);
   }

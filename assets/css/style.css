@@ -1310,3 +1310,52 @@ button { font: inherit; color: inherit; }
   .archive { padding-top: 34px; }
   .archive-head { gap: 14px; }
 }
+
+/* Keep reading controls within reach on narrow and notched screens. */
+body {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.masthead { padding-top: env(safe-area-inset-top, 0px); }
+.readbar { top: env(safe-area-inset-top, 0px); }
+.paper, .paper-body .sec {
+  scroll-margin-top: calc(18px + env(safe-area-inset-top, 0px));
+}
+@media (max-width: 740px) {
+  .masthead-row, .site-nav { gap: 4px 12px; flex-wrap: wrap; }
+  .site-nav a { white-space: nowrap; }
+  .site-nav a, .filter, .daynav a, .month-pager a,
+  .paper-links a, .sources a, .linklike {
+    min-height: 44px;
+    padding-block: 8px;
+  }
+  .paper-links a, .sources a, .daynav a, .month-pager a, .linklike {
+    display: inline-flex;
+    align-items: center;
+  }
+  .daynav, .month-pager, .week-label { flex-wrap: wrap; }
+  .paper-links, .sources { gap: 8px 16px; }
+  .feature-title, .day-body, .review-main, .item-title { overflow-wrap: break-word; }
+  .dispatch a { min-height: 48px; }
+  .dispatch span {
+    display: -webkit-box;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+@media (max-width: 1080px) {
+  .toc-inline { padding: 0; }
+  .toc-inline summary { min-height: 44px; align-items: center; }
+  .toc-inline summary::before { content: "+"; font-size: 18px; }
+  .toc-inline[open] summary::before { content: "−"; }
+  .toc-inline summary [data-progress] { margin-left: auto; }
+  .toc-inline .toc-nav { padding: 8px 0 16px; }
+  .toc-inline .toc-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: 8px;
+  }
+}
