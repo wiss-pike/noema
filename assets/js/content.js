@@ -38,7 +38,7 @@ const NoemaContent = (() => {
     ]);
     const editions = new Map(archive.items.map(day => [day.date, day]));
     for (const day of published) {
-      if (day && typeof day.date === 'string' && Array.isArray(day.entries)) {
+      if (day && typeof day.date === 'string' && Array.isArray(day.entries) && !editions.has(day.date)) {
         editions.set(day.date, day);
       }
     }

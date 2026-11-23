@@ -13,3 +13,4 @@ crons = ["0 0 * * *"]
 [[d1_databases]]
 binding = "ARCHIVE"
 database_name = "noema-editions"
+database_id = "c2de0a2b-0f9c-43e5-929e-eb80bdf293a4"

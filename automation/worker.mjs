@@ -139,7 +139,7 @@ async function collect(env, now) {
     }
   }
   if (!candidates.length) throw new Error('No recent stories could be collected');
-  const response = await env.AI.run('@cf/qwen/qwen3.8-27b', {
+  const response = await env.AI.run('@cf/google/gemma-4-26b-a4b-it', {
     messages: [
       {
         role: 'system',
@@ -149,7 +149,7 @@ async function collect(env, now) {
     ],
     response_format: { type: 'json_object' },
     max_completion_tokens: 3000,
-    reasoning_effort: 'low',
+    chat_template_kwargs: { enable_thinking: false },
     temperature: 0.2,
   });
   const edition = makeEdition(response, candidates, date);
