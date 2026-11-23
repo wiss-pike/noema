@@ -3,7 +3,7 @@
     "title": "Noema",
     "subtitle": "诺埃玛 · 论文精读归档",
     "intro": "每周一篇，只收 AI 核心技术方向。读过的论文按月留在这里，随时可以翻回去。",
-    "updated": "2026-11-22"
+    "updated": "2026-11-23"
   },
   "directions": ["架构", "训练方法", "Agent", "评测"],
   "papers": [
@@ -99,6 +99,61 @@
         {"t": "p", "text": "先看 §3.2 到 §3.4 三节机制，再跳到 §4.1 的 Table 3 看那条消融阶梯，最后回 §2 补 continuum memory hierarchy。博客 15 分钟，正文约 90 分钟，附录 B.2 和 B.5 各 10 分钟，两小时能拿到主干。"},
         {"t": "h", "text": "现在就能做的一件事"},
         {"t": "callout", "text": "把 Table 3 那五行数字抄下来算相邻差值，就能直观看到「做梦」这一步的分量；再对照图 6 的 BABILong 曲线，判断它赢在机制还是赢在训练协议。"}
+      ]
+    },
+    {
+      "id": "2026-11-23-mass",
+      "date": "2026-11-23",
+      "month": "2026-11",
+      "direction": "Agent",
+      "titleZh": "通过多智能体自监督的递归自我改进",
+      "titleEn": "Recursive Self-Improvement through Multi-Agent Self-Supervision",
+      "authors": "Hyunin Lee（UC Berkeley，工作完成于 Sakana AI 实习期间，通讯作者）、Jinglue Xu（Sakana AI）、Jeffrey Seely（Sakana AI）、Donghyun Lee（UC Berkeley）、Somayeh Sojoudi（UC Berkeley）、Matei Zaharia（UC Berkeley）、Yujin Tang（Sakana AI）",
+      "venue": "arXiv:2610.12176（cs.AI），v1 2026-10-08，39 页预印本；作者另撰长博客（pub.sakana.ai/mass）与项目概览（sakana.ai/mass）",
+      "tags": ["递归自我改进", "多智能体", "自监督蒸馏"],
+      "readTime": "约 2 小时",
+      "oneLine": "把多智能体编排当成可优化的外挂，再把团队跑出的好轨迹蒸馏回同一个模型，两轮之后在四个开放式科研 benchmark 上，每输出一个 token 换来的得分涨到原来的 1.2 至 1.6 倍。",
+      "links": {
+        "paper": "https://arxiv.org/abs/2610.12176",
+        "blog": "https://pub.sakana.ai/mass/",
+        "code": "https://github.com/SakanaAI/mass"
+      },
+      "body": [
+        {"t": "h", "text": "为什么值得读"},
+        {"t": "p", "text": "这周这篇值得花两小时，因为它改动的是最敏感的一个假设：模型能不能自己教自己。Sakana AI 和 UC Berkeley 的团队让同一个 Qwen3.6-27B 分身成执行者、流程优化者、评审者三个角色，跑了两整轮自我进化。前置门槛不高，不必先懂 RLHF，只要知道 SFT 和多智能体怎么分工，就能跟上主线。全文 39 页预印本，v1 于 2026-10-08 提交到 arXiv，作者另外写了一篇长博客、开了项目页，代码也放了出来。"},
+        {"t": "h", "text": "作者本人怎么说"},
+        {"t": "quote", "text": "The model itself may then inevitably be the most capable supervisor available and need to figure out for itself how to improve.", "note": "开篇就把前提摆明：当真问题超出人类专家能可靠评估的范围，模型自己就成了最强的监督者。RSI（recursive self-improvement，递归自我改进）指的是评估成本逼出来的现实路径，而非科幻设定。"},
+        {"t": "quote", "text": "The central question is how to obtain useful self-supervision within this homogeneous loop.", "note": "同质回路指同一个模型既是被改进对象，又是优化器和评审者。全文要回答的就是这种闭环里自监督信号从哪来。"},
+        {"t": "quote", "text": "Our interpretation is that the strong evaluator may provide high-quality feedback, but the weak optimizer is not capable enough to digest it.", "note": "这是最反直觉的一条：只把评审者换成 GPT-5.5 帮助有限，把优化器也换掉才快很多，所以瓶颈在「消化反馈」的优化器一侧，不在打分的人。"},
+        {"t": "quote", "text": "strong iterations can be followed by sharp performance regressions", "note": "文本空间里搜索工作流没有学习率这个概念，一步走对了，下一步可能直接崩。"},
+        {"t": "quote", "text": "the LLM optimizer may need an equivalent of a learning-rate scheduler to stabilize the search in text space.", "note": "他们自己把「给文本搜索配一个学习率调度器」列为待解问题，没有给出成品解法。"},
+        {"t": "quote", "text": "In this sense, shared blind spots may be an Achilles' heel of recursive self-improvement.", "note": "同质回路的共同盲点会同时污染行为和纠错机制，这是他们主动写出来的安全担忧，不是外人硬加的。"},
+        {"t": "h", "text": "问题背景"},
+        {"t": "p", "text": "RSI 靠两条腿走路：评估和改进。开放科研任务没有自动判分，人类评估又慢又贵——论文举的例子是一次托卡马克等离子体研究可能要一亿两千万 CPU 小时。让模型自评则会共享同一套先验，容易把错误当进步放大，这也是过去 self-correction 类工作翻车的地方。作者的破局点不是换一个更强的裁判，而是换「组织方式」：借 Minsky 的 Society of Mind（心智社会，把智能看成许多简单个体协作的产物），把一个模型复制成一支有分工的队。"},
+        {"t": "h", "text": "方法核心"},
+        {"t": "p", "text": "内循环里，工作流被写成一段可编辑的文本 prompt，四个部件：role（子代理的角色）、instruction（具体任务）、contract（必须交回什么，含检查项）、hop（调用顺序）。优化器读评审器的成对反馈改这段文本，赢了就顶替当前 champion，本质是 elite size 为 1 的进化搜索，外面还套一层 structural guardrails（结构护栏）防止越改越乱。金融任务那个例子很能说明问题：数据子代理的交付契约里必须包含 no_future_leakage、train_end_before_val_start 这类布尔检查项，等于把「别用未来数据」这条研究常识写成下游代理能验证的字段。"},
+        {"t": "p", "text": "外循环把 champion 在每个任务上跑 18 次，当前模型自己两两比较、用 Bradley–Terry 排序，取前 15 条当训练、第 16 条做验证；训练时把 workflow 文本从 prompt 里删掉，逼它从任务本身学会怎么组织工作。规模很克制：LoRA rank 64、1,624 步、119 条轨迹、2,435 个训练窗口、17.2M 监督 token。"},
+        {"t": "h", "text": "关键实验与数字"},
+        {"t": "p", "text": "合成任务是 12 个科研编程任务（金融、机器人、制药各四个，由 GPT-5.5 生成），9 个训练 3 个测试，实际 8 个贡献训练数据。外部裁判用 GPT-5.5 和 Claude Opus 4.8，各跑三个种子、六次判断，全程不参与训练。训练任务上第一轮对基座胜率 65.6%，第二轮 82.5%；测试任务 53.9% 到 69.9%；第二轮对第一轮 60.8%。"},
+        {"t": "p", "text": "公开 benchmark：ScienceAgentBench 从 28.8 到 31.7，MLR-Bench 1.58 到 2.40，AstaBench 0.053 到 0.067，DSBench 0.473 到 0.482。评审者自身也在变准：与外部强模型判断的一致率从 0.73 升到 0.91、0.93。"},
+        {"t": "p", "text": "数据效率这条最有意思：多智能体轨迹训出的学生用 28.82M token 拿到 68.3%，单智能体学生用 42M 才 64.0%，省 31.4% 的 token；代价是多智能体一次跑出的 token 约为单智能体的 2.4 倍。行为内化也能量化：不给 workflow、只给任务，委派行为从 1/110 升到 48/110、87/110，代码交接从 1/110 升到 42/110、83/110。"},
+        {"t": "h", "text": "与已有工作的差别"},
+        {"t": "p", "text": "Self-Rewarding LM、SiriuS、Multi-Agent Evolve 也在自评或多智能体轨迹上做文章；ADAS、AFlow、GPTSwarm 优化 agent 图但不动权重；SIA、HASE 需要独立 verifier 或任务奖励。MASS 的区别是把「编排」和「权重」放进同一个循环交替升级，而且三个角色始终是同一个模型，没有任何外部强模型介入。"},
+        {"t": "h", "text": "局限与争议"},
+        {"t": "p", "text": "以下是我的判断，不是作者原话。"},
+        {"t": "ul", "items": [
+          "样本规模：合成任务由 GPT-5.5 生成，只有 8 个任务进训练，样本小到结论容易被单个任务的特性带偏。",
+          "裁判性质：外部裁判仍是 LLM，「更好」只是更强模型的偏好，不是客观正确，而论文把它当作主要证据。",
+          "算力开销：token 开销的统计不含搜索、18 次采样与评估的成本，脚注自己写明，所以「省 token」不等于省算力。",
+          "泛化范围：只有一个基座、一个 harness（qwen-code 0.20.0）、两个 cycle；Terminal-Bench 2.0 只有基座的 0.96 倍、SWE-bench Verified 0.94 倍（绝对值 37.5 到 35.2、62.6 到 61.1），说明能力在向科研型任务窄化。",
+          "风险披露：论文没有单列 Limitations 小节，风险主要写在博客与结论里，shared blind spots 那条共同盲点被他们自己列为 Achilles' heel。",
+          "数字对不上：仓库 README 的 MLR-Bench 写的是 1.71 到 2.25，与论文图表的 1.58 到 2.40 不一致，引用以论文为准。"
+        ]},
+        {"t": "h", "text": "怎么读"},
+        {"t": "p", "text": "前置三样：SFT 与 LoRA 大致在做什么、orchestrator 与 subagent 的调用关系、成对比较与胜率怎么读。"},
+        {"t": "p", "text": "顺序：先读博客（约 16 分钟）建立两个循环的直觉；再读第 3 节和 Algorithm 1 到 3，把内循环外循环对上；然后看图 3 与表 1；第 5.1 节的图 7、图 8 讲瓶颈和不稳定，值得细看；最后读结论，附录留到需要复现时再翻。两小时够拿到主干。"},
+        {"t": "h", "text": "现在就能做的一件事"},
+        {"t": "callout", "text": "先只读博客里讲两个循环的那部分（https://pub.sakana.ai/mass/ ，约 16 分钟），再打开仓库 https://github.com/SakanaAI/mass 找到那段 workflow 文本，确认自己能把 role / instruction / contract / hop 四个字段和论文对上；重点看金融任务里的 no_future_leakage、train_end_before_val_start 是怎么写成检查项的——做完这一步，你就抓住了全文最可迁移的设计。"}
       ]
     }
   ]
