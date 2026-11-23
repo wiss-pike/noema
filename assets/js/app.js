@@ -193,7 +193,11 @@
     var L = p.links || {};
     var out = [];
     if (NoemaContent.safeLink(L.paper)) out.push('<a class="link" href="' + esc(L.paper) + '" target="_blank" rel="noopener">论文原文<span class="arrow">↗</span></a>');
-    if (NoemaContent.safeLink(L.pdf, true)) out.push('<a class="link link-primary" href="' + esc(L.pdf) + '" download>论文原件 PDF<span class="arrow">↓</span></a>');
+    if (NoemaContent.safeLink(L.pdf, true)) {
+      var pdfAttributes = L.pdf.startsWith('assets/') ? 'download' : 'target="_blank" rel="noopener"';
+      out.push('<a class="link link-primary" href="' + esc(L.pdf) + '" ' + pdfAttributes + '>论文原件 PDF<span class="arrow">↗</span></a>');
+    }
+    if (NoemaContent.safeLink(L.fullText)) out.push('<a class="link" href="' + esc(L.fullText) + '" target="_blank" rel="noopener">HTML 全文<span class="arrow">↗</span></a>');
     if (NoemaContent.safeLink(L.blog)) out.push('<a class="link" href="' + esc(L.blog) + '" target="_blank" rel="noopener">作者博客<span class="arrow">↗</span></a>');
     if (NoemaContent.safeLink(L.code)) out.push('<a class="link" href="' + esc(L.code) + '" target="_blank" rel="noopener">代码与权重<span class="arrow">↗</span></a>');
     if (!out.length) return '';
@@ -440,11 +444,7 @@
   }
 
   function init() {
-    fetch('data/papers.json', { cache: 'no-store' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
+    NoemaContent.papers()
       .then(function (data) {
         DATA = data || {};
         if (!DATA.papers) DATA.papers = [];

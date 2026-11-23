@@ -12,10 +12,16 @@ def build(output, with_briefing=False):
     for name in ("index.html", "month.html", "daily.html", "weekly.html"):
         copy2(ROOT / name, output / name)
     if with_briefing:
-        for name in ("index.html", "daily.html"):
+        endpoints = {
+            "index.html": ("daily", "papers"),
+            "daily.html": ("daily",),
+            "month.html": ("papers",),
+        }
+        for name, feeds in endpoints.items():
             page = output / name
             html = page.read_text(encoding="utf-8")
-            page.write_text(html.replace("</head>", '<meta name="noema-daily-api" content="/api/daily">\n</head>'), encoding="utf-8")
+            meta = "".join(f'<meta name="noema-{feed}-api" content="/api/{feed}">\n' for feed in feeds)
+            page.write_text(html.replace("</head>", meta + "</head>"), encoding="utf-8")
         copy2(ROOT / "automation/pages/routes.json", output / "_routes.json")
     copytree(ROOT / "assets", output / "assets")
     data = output / "data"

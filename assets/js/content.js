@@ -16,8 +16,8 @@ const NoemaContent = (() => {
     }
   }
 
-  async function publishedEditions() {
-    const config = document.querySelector('meta[name="noema-daily-api"]');
+  async function published(feed) {
+    const config = document.querySelector('meta[name="noema-' + feed + '-api"]');
     if (!config) return [];
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 4000);
@@ -32,12 +32,12 @@ const NoemaContent = (() => {
   }
 
   async function daily() {
-    const [archive, published] = await Promise.all([
+    const [archive, editionsFromApi] = await Promise.all([
       json('data/daily.json'),
-      publishedEditions(),
+      published('daily'),
     ]);
     const editions = new Map(archive.items.map(day => [day.date, day]));
-    for (const day of published) {
+    for (const day of editionsFromApi) {
       if (day && typeof day.date === 'string' && Array.isArray(day.entries) && !editions.has(day.date)) {
         editions.set(day.date, day);
       }
@@ -49,5 +49,22 @@ const NoemaContent = (() => {
     return archive;
   }
 
-  return { json, daily, safeLink };
+  async function papers() {
+    const [archive, recommendations] = await Promise.all([
+      json('data/papers.json'),
+      published('papers'),
+    ]);
+    const ids = new Set(archive.papers.map(paper => paper.id));
+    for (const paper of recommendations) {
+      if (!paper || typeof paper.id !== 'string' || ids.has(paper.id) ||
+          !/^\d{4}-\d{2}-\d{2}$/.test(paper.date) || !Array.isArray(paper.body)) continue;
+      ids.add(paper.id);
+      archive.papers.push(paper);
+      if (!archive.directions.includes(paper.direction)) archive.directions.push(paper.direction);
+    }
+    archive.papers.sort((a, b) => b.date.localeCompare(a.date));
+    return archive;
+  }
+
+  return { json, daily, papers, safeLink };
 })();

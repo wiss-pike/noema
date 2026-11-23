@@ -1,5 +1,6 @@
 import { XMLParser } from 'fast-xml-parser';
 import { feeds } from './sources.mjs';
+import { collectPaper, PAPER_CRON } from './papers.mjs';
 
 const DAY = 86_400_000;
 const formatter = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Shanghai' });
@@ -160,9 +161,13 @@ async function collect(env, now) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname !== '/api/daily') return new Response('Not found', { status: 404 });
+    const query = {
+      '/api/daily': 'SELECT body FROM editions ORDER BY date DESC',
+      '/api/papers': 'SELECT body FROM weekly_papers ORDER BY week DESC',
+    }[url.pathname];
+    if (!query) return new Response('Not found', { status: 404 });
     if (request.method !== 'GET') return new Response('Method not allowed', { status: 405 });
-    const rows = await env.ARCHIVE.prepare('SELECT body FROM editions ORDER BY date DESC').all();
+    const rows = await env.ARCHIVE.prepare(query).all();
     return Response.json({ items: rows.results.map(row => JSON.parse(row.body)) }, {
       headers: {
         'Cache-Control': 'public, max-age=60',
@@ -171,6 +176,7 @@ export default {
     });
   },
   scheduled(controller, env, ctx) {
-    ctx.waitUntil(collect(env, controller.scheduledTime));
+    const task = controller.cron === PAPER_CRON ? collectPaper : collect;
+    ctx.waitUntil(task(env, controller.scheduledTime));
   },
 };
