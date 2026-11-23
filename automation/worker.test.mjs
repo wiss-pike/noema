@@ -23,6 +23,13 @@ test('RSS keeps the last 24 hours, cleans text and strips tracking links', () =>
   }]);
 });
 
+test('Atom updated dates and RSS publication dates remain supported', () => {
+  const atom = `<feed><entry><title>Research</title><link rel="alternate" href="https://example.org/atom"/><updated>2026-11-22T20:30:00Z</updated></entry></feed>`;
+  assert.equal(readFeed(atom, feeds[0], now)[0].link, 'https://example.org/atom');
+  const republished = `<feed><entry><title>Older article</title><link href="https://example.org/old"/><published>2026-11-20T10:00:00Z</published><updated>2026-11-22T20:30:00Z</updated></entry></feed>`;
+  assert.deepEqual(readFeed(republished, feeds[0], now), []);
+});
+
 test('editorial quotas are enforced and links only come from candidate feeds', () => {
   const kinds = ['domestic', 'domestic', 'domestic', 'foreign', 'foreign', 'foreign', 'foreign', 'primary', 'primary'];
   const candidates = kinds.map((kind, index) => ({ kind, category: index < 2 ? '科技' : 'AI', source: kind, link: 'https://example.org/' + index }));

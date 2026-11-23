@@ -38,12 +38,19 @@ function sourceLink(value, base) {
 }
 
 export function readFeed(content, source, now) {
-  const parsed = xml.parse(content);
-  const records = parsed.rss?.channel?.item ?? parsed.feed?.entry ?? parsed['rdf:RDF']?.item;
+  const blocks = content.matchAll(/<(item|entry)(?:\s[^>]*)?>([\s\S]*?)<\/\1>/g);
+  const recent = [];
+  for (const [, tag, body] of blocks) {
+    const original = body.match(/<(pubDate|published|dc:date)>([^<]*)<\/\1>/);
+    const updated = !original && body.match(/<updated>([^<]*)<\/updated>/);
+    const date = Date.parse(original?.[2] ?? updated?.[1]);
+    if (date > now - DAY && date <= now) recent.push({ tag, body, date });
+  }
   const items = [];
-  for (const record of asArray(records)) {
-    const date = Date.parse(plain(record.pubDate ?? record.published ?? record.updated ?? record['dc:date'], 80));
-    if (!(date > now - DAY && date <= now)) continue;
+  for (const { tag, body, date } of recent.sort((a, b) => b.date - a.date)) {
+    if (items.length === 5) break;
+    const record = xml.parse('<' + tag + '>' + body + '</' + tag + '>')[tag];
+    if (!record || typeof record !== 'object') continue;
     const url = asArray(record.link).find(link => link?.['@_rel'] === 'alternate') ??
       asArray(record.link)[0];
     const link = sourceLink(url?.['@_href'] ?? plain(url, 2000), source.url);
@@ -54,7 +61,7 @@ export function readFeed(content, source, now) {
       excerpt: plain(record.description ?? record.summary ?? record['content:encoded'], 450),
     });
   }
-  return items.sort((a, b) => b.date - a.date).slice(0, 5);
+  return items;
 }
 
 function complies(items) {
