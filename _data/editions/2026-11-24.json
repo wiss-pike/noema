@@ -1,0 +1,180 @@
+{
+  "date": "2026-11-24",
+  "window": "2026-11-23 08:00 — 次日 08:00（北京时间）",
+  "lead": "黄仁勋复职把整条 AI 交易从悬崖边拉了回来：英伟达单日涨 31%、纳指涨 6.47%，纳指 100 一天增加逾 2 万亿美元市值。产业侧，亚马逊约 75 亿美元买下 Decart 的芯片优化栈与团队，Anthropic 把 Claude 推到「决定代码能不能合」的位置；研究侧，DeepMind 让 Gemini 4 智能体改量子算法、每个结果先过 Lean 证明。时事三条：俄称爱沙尼亚「处于引发公开战争的边缘」，加沙空袭击杀一名 UNRWA 员工，中国—东盟周在重庆发布十项合作计划、把跨境算力写进清单。",
+  "note": "覆盖 2026-11-23 08:00 至 2026-11-24 08:00（北京时间）。与 11-23 期不重复：OpenAI 困惑度长文、MiniMax 密码分析、马斯克资金荒警告、中国大模型调用量、韩国高考 AI 作弊、俄「水星号」被击沉均已在上一期收录；今天泽连斯基称击沉「水星号」的后续表态只作背景，不单列。",
+  "entries": [
+    {
+      "title": "英伟达 11 天内反转：黄仁勋复职 CEO，股价单日涨 31%、纳指涨 6.47%",
+      "category": "AI",
+      "points": [
+        "11-23（美东），英伟达宣布董事会一致投票，即日起恢复黄仁勋总裁、首席执行官及董事职务。他 11-12 因婚外情曝光辞职，其中一位当事人被美方怀疑为中国情报人员；代理 CEO 期间由 CFO Colette Kress 顶上。",
+        "董事会称，在听取美国高级官员意见后认定其复职不构成国家安全风险；独立董事对涉外国情报行动的调查、以及国会关于 Megaspeed 芯片流向的调查都还在继续，中方此前否认相关间谍指控。",
+        "市场端：英伟达收涨逾 31%，单日市值增加约 9500 亿美元；纳斯达克涨 6.47% 至 24080.94，标普 500 涨 4.75% 至 7238.84，道指涨 3.02% 至 49599.89，纳指 100 单日增加逾 2 万亿美元市值。",
+        "口径差异：外网报道把重点放在「11 天内两次一致决议、方向相反」的治理质疑，以及尚未结束的涉谍与出口调查；国内媒体（新华社、虎嗅）突出特朗普称这是「正确且恰当的决定」、美国政府称无证据显示违法，以及市值单日增近万亿的纪录。"
+      ],
+      "sources": [
+        {
+          "label": "Reuters（The Straits Times 刊载）",
+          "url": "https://www.straitstimes.com/business/companies-markets/us-stocks-surge-as-jensen-huang-returns-as-nvidia-ceo"
+        },
+        {
+          "label": "ABC News（澳大利亚，路透社稿）",
+          "url": "https://www.abc.net.au/news/2026-11-24/nvidia-ceo-jensen-huang-reinstated/107419102"
+        },
+        {
+          "label": "虎嗅早报（引新华社）",
+          "url": "https://xiuxiu.huxiu.com/hxgpt_agent/morning_daily/2026-11-24.html"
+        }
+      ]
+    },
+    {
+      "title": "亚马逊约 75 亿美元买下 Decart 优化栈与团队，为 Trainium 加码",
+      "category": "AI",
+      "points": [
+        "11-23 亚马逊官网宣布已签署协议，购买 Decart 优化栈（Decart Optimization Stack，DOS）的专有技术，并吸纳三位联合创始人 Dean Leitersdorf、Moshe Shalev、Orian Leitersdorf 及研究与工程团队；交易还需监管批准，Decart 自研的实时视频等模型不在交易范围内。",
+        "金额双方未披露，彭博与以色列媒体称约 75 亿美元。DOS 是一层让模型在英伟达、亚马逊 Trainium、谷歌等不同芯片上都跑得更快、更容易迁移的软件，Decart 自 2025 年起就与亚马逊在 Trainium 上做全栈优化。",
+        "值得注意：这是典型的「买技术 + 买人」而不是整体收购，和今年大厂抢 AI 团队的套路一致。对普通用户的实际意义是推理成本与芯片选择权——AWS 想把 Trainium 的性价比做成对外卖点，前提是软件层别被英伟达的生态锁死。"
+      ],
+      "sources": [
+        {
+          "label": "Amazon 官方公告",
+          "url": "https://www.aboutamazon.com/news/company-news/amazon-decart-ai-optimization"
+        },
+        {
+          "label": "CNBC",
+          "url": "https://www.cnbc.com/2026/11/23/amazon-decarts-ai-acquisition.html"
+        },
+        {
+          "label": "Bloomberg",
+          "url": "https://www.bloomberg.com/news/articles/2026-11-23/amazon-is-said-to-pay-7-5-billion-for-ai-startup-decart-s-tech"
+        },
+        {
+          "label": "财联社（新华社国际稿亦有报道）",
+          "url": "https://news.qq.com/rain/a/20261124A0162G00"
+        }
+      ]
+    },
+    {
+      "title": "DeepMind 用 Gemini 4 智能体改量子算法，每个结果先过 Lean 证明",
+      "category": "AI",
+      "points": [
+        "11-23，Google DeepMind 与 Google Quantum AI 发布联合研究：多组 Gemini 4 智能体提出并改进量子程序，每个方案都要在 Lean 4 定理证明器里证明「算得对、资源账也对」，通过后才计入结果；相关 Lean 库、问题定义与已验证解已开源到 GitHub。",
+        "结果：反正弦（arcsin）子程序的估算时空成本降到较早设计的约 1/290；聚变相关电路约 11.8 倍、光化学 8 倍、药物代谢模拟 2.5 倍、并行搜索最高 2.57 倍。",
+        "口径差异：国内标题多写「最高提速 290 倍」，外网技术解读强调这是相对旧设计的估算成本改进，不是量子芯片上的实测速度；更有分量的部分是「AI 出方案 + 机器核验」这套可审计流程，外部研究者能查清省在了哪里。"
+      ],
+      "sources": [
+        {
+          "label": "Google DeepMind 官方博客",
+          "url": "https://deepmind.google/blog/finding-faster-quantum-algorithms-with-agents-and-formal-verification/"
+        },
+        {
+          "label": "IT之家",
+          "url": "https://www.ithome.com/1/031/232.htm"
+        },
+        {
+          "label": "技术解读：290 倍是成本改进而非真机提速",
+          "url": "https://ic.work/zixun/121337.html"
+        }
+      ]
+    },
+    {
+      "title": "Anthropic 推出 Claude Ship：让 AI 智能体审代码、修 CI、按策略批准合并",
+      "category": "AI",
+      "points": [
+        "11-23，Anthropic 发布 Claude Ship 测试版，面向 GitHub 上的 Claude Team / Enterprise 仓库：Code Review 已正式可用，PR Steward 负责处理 CI 失败、合并冲突和评审意见，每次推送后说明改了什么、必要时怎么撤回；Claude Approvals 按团队写在仓库里的策略文件执行审批。",
+        "审批不是无条件放行：会综合 Code Review 结果与企业自建分类器的信号，权限受团队策略约束。发布信息由 Anthropic 开发者账号 @ClaudeDevs 在 X 上先行公布（官方账号，属一手发布）。",
+        "值得注意：AI 从「写代码」走到「决定代码能不能合」，责任归属、审计记录和回滚设计成了产品的一部分；这也是 Anthropic 上市后第一个面向开发者的商业化新工具，正撞在 AI 生成代码把评审环节堵死这个痛点上。"
+      ],
+      "sources": [
+        {
+          "label": "TechCrunch",
+          "url": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes/"
+        },
+        {
+          "label": "IT之家",
+          "url": "https://news.qq.com/rain/a/20261124A038PF00"
+        }
+      ]
+    },
+    {
+      "title": "美国两州起诉 Grok：指其生成性化深伪与儿童性虐待图像，弱防护是「产品特性」",
+      "category": "AI",
+      "points": [
+        "11-23，俄勒冈州总检察长 Dan Rayfield 与弗吉尼亚州总检察长 Jay Jones 分别起诉 SpaceX（X 与 xAI 的母公司），指其违反州消费者保护法：Grok 的图像功能持续产出未经同意的性化图像、包括儿童性虐待材料，公司却对外宣称产品安全。",
+        "诉状的说法是「不是漏洞，而是产品特性」：弱防护是设计选择；弗州诉状还称马斯克明知相关担忧上升，却把它当成增加收入的市场机会。两州均寻求赔偿，公司回应称是滥用者绕过了既有防护。",
+        "值得注意：这是美国州层面第一次就 AI 生成图像起诉大厂，路径不是内容审查而是消费者保护——不需要新的联邦立法也能直接罚钱，很可能成为其他州的模板。"
+      ],
+      "sources": [
+        {
+          "label": "The Verge",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040255/x-grok-ai-deepfakes-oregon-virginia-lawsuit"
+        },
+        {
+          "label": "South China Morning Post",
+          "url": "https://www.scmp.com/news/world/united-states-canada/article/3375532/us-states-sue-musk-companies-over-flood-sexualised-images-made-ai-chatbot-grok"
+        },
+        {
+          "label": "凤凰网科技（据 The Verge）",
+          "url": "https://original.ifeng.com/c/8yIuGdTeWcH"
+        }
+      ]
+    },
+    {
+      "title": "俄称爱沙尼亚「处于引发公开战争的边缘」，爱方 12 月 1 日起关闭陆路口岸",
+      "category": "时事",
+      "points": [
+        "11-23，俄外交部召见爱沙尼亚驻俄临时代办，就爱方自 12 月 1 日起关闭两国陆路口岸至少半年提出正式抗议，称这类「挑衅且极其危险」的举动「处于引发（与俄）公开战争的边缘」。",
+        "起因是爱沙尼亚指俄安全部门策划对其一家防务公司实施纵火未遂，俄方否认。俄方还指责爱沙尼亚默许乌克兰「悄悄」使用其领空打击俄目标、阻挠俄货船在波罗的海航行、禁止俄白粮食过境、打压俄语并威胁关闭俄东正教会。",
+        "爱沙尼亚外交部否认允许本国领土被用于他国军事行动，称一般不回应俄方宣传叙事。",
+        "值得注意：北约成员国与俄罗斯之间第一次把「断边」落到具体日期， rhetoric 之外还有口岸、航运和能源三条实际摩擦线。"
+      ],
+      "sources": [
+        {
+          "label": "Reuters（The Star 刊载）",
+          "url": "https://www.thestar.com.my/news/world/2026/11/24/moscow-accuses-estonia-of-hostile-actions-on-039verge-of-triggering-open-war039"
+        }
+      ]
+    },
+    {
+      "title": "加沙空袭击杀一名 UNRWA 员工，2025 年停火以来死亡人数逾 1600",
+      "category": "时事",
+      "points": [
+        "11-23，以军对加沙发动多轮空袭，至少 3 人死亡，其中一人是联合国近东巴勒斯坦难民救济和工程处（UNRWA）员工 Adel Al-Helo：他在北部贾巴利亚难民营一处水井附近作业时被击中，另有 3 人受伤，他在该机构工作了 35 年。",
+        "当天晚些时候，加沙城西部一辆汽车遭空袭，造成 2 人死亡、多人受伤。以军表示正在核查相关报道，未立即置评。",
+        "据当地卫生部门统计，2025 年 10 月停火以来加沙已有逾 1600 名巴勒斯坦人死亡，另有 5 名以军士兵死亡。",
+        "口径差异：外网（路透、美联社）把 UNRWA 员工身份、水井作业场景与停火后累计死亡数放在前面；国内转载（中新网）更简短，只写 3 人死亡与以军暂未回应。"
+      ],
+      "sources": [
+        {
+          "label": "Arab News（美联社稿）",
+          "url": "https://www.arabnews.com/middle-east/israeli-strikes-kill-at-least-3-in-gaza-including-worker-with-un-palestinian-agency-3013767"
+        },
+        {
+          "label": "中国新闻网（引路透社）",
+          "url": "https://news.qq.com/rain/a/20261124A031MD00"
+        }
+      ]
+    },
+    {
+      "title": "中国—东盟周在重庆开幕，十项计划把「跨境算力」写进合作清单",
+      "category": "时事",
+      "points": [
+        "11-23，2026 中国—东盟周在重庆开幕，双方发布十项合作计划，覆盖经贸、科创、互联互通、教育、文旅、农业、法治、医卫、媒体与青年交流，配套 6 大类 30 场活动。",
+        "量化目标：经贸上推动年进出口贸易额超 1500 亿元、累计在东盟投资项目 50 个；科创上探索中国—东盟跨境算力合作、为东盟培育科创人才 350 人、促成 20 项以上创新成果；医卫上共建中国（重庆）—东盟医疗交流合作中心、培养 100 名东盟医疗人才。",
+        "今年是中国—东盟建立对话关系 35 周年、全面战略伙伴关系 5 周年；开幕式后首场高端对话会的主题就是「人工智能驱动数字与绿色转型」，东盟方面提出共建中国—东盟算力网络、加强 AI 治理与数据保护。",
+        "值得注意：跨境算力被写进地方政府与东盟的合作清单，说明算力出海已经从事企业务升级成外交与区域合作层面的议题。"
+      ],
+      "sources": [
+        {
+          "label": "新华社（中国网转载）",
+          "url": "https://news.china.com.cn/2026-11/24/content_118786475.shtml"
+        },
+        {
+          "label": "重庆市人民政府",
+          "url": "https://wap.cq.gov.cn/ywdt/jrcq/202611/t20261124_16464283.html"
+        }
+      ]
+    }
+  ]
+}
