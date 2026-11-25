@@ -1,0 +1,187 @@
+{
+  "date": "2026-11-25",
+  "window": "2026-11-24 08:00 — 次日 08:00（北京时间）",
+  "lead": "今天的主线是「AI 交出的结果开始需要人类复核」：Anthropic 的 Claude 端出 70 页 VP≠VNP 证明和 Lean 4 形式化，OpenAI 四小时后跟进，数学界还没人审。市场把黄仁勋复职的涨幅一天吐回，费城半导体指数跌 7.88%、存储芯片集体重挫，Anthropic 跌破发行价；Axios 同日曝出两家实验室的内部模型「强到不敢发」。国内智谱发布 GLM-5.4，用 Loop Transformer 不加参数换深度。时事三条：霍尔木兹封锁再加码把油价推高 2%，赛诺菲 410 亿美元现金买下 Insmed，上海市委书记陈吉宁被查。",
+  "note": "覆盖 2026-11-24 08:00 至 2026-11-25 08:00（北京时间）。与 11-24 期不重复：黄仁勋复职本身、亚马逊买 Decart、DeepMind 量子算法、Claude Ship、Grok 诉讼、爱沙尼亚口岸、加沙空袭、中国—东盟周均已在上一期收录，今天只取 11-24 美股收盘及后续。未单列但同在 24 小时内的：神舟二十四号 11-25 08:18 发射、首次有外籍航天员；戴尔把全年 AI 服务器营收指引从 740 亿上调到 780 亿美元；小米 Q3 与今年 160 亿元 AI 投入；蚂蚁百灵开源 124B 医疗多模态模型；B 站、知乎财报。来源说明：Axios、MIT Technology Review、路透的原文需要订阅或未给出可直连地址，条目里改用可公开访问的转载与二手报道并注明出处，未编造原始链接。",
+  "entries": [
+    {
+      "title": "Claude 交出 70 页 VP≠VNP 证明与 Lean 4 形式化，OpenAI 四小时后跟进",
+      "category": "AI",
+      "points": [
+        "11-23 21:43（UTC），Anthropic 在公开的形式化数学仓库里放入 vp-vnp 目录：70 页论文《VP ≠ VNP over every field》、数百个文件的 Lean 4 证明，以及一句说明——论文和形式化都由内部研究用 Claude 模型写成，没有任何人类数学家检查过。同一份文稿以 2611.00954v1 挂在 Hexagon，没上 arXiv，也未经同行评审。",
+        "结论的边界写得很清楚：证明的是算术电路下哈密顿回路多项式（以及特征 2 以外的永久式）需要超过 m^(c(log m)^(1/3)) 个门，属于代数复杂度的 VP 与 VNP——也就是 P/NP 的代数版；它明确不解决 P 与 NP，也不适用于布尔电路。",
+        "11-24 01:30（UTC），OpenAI 也放出自己的 VP≠VNP 论文，距 Anthropic 不到四小时，双方都称模型独立得出。Lean 内核通过只保证证明和所写命题一致，不保证命题就是原猜想，所以真正的检验要等数学家。",
+        "为什么值得看：这是「AI 做出可机器核验的数学结果」第一次被直接扔到公开仓库里等人查错，也把「形式化通过 ≠ 结论成立」这条边界摆到了台面上。"
+      ],
+      "sources": [
+        {
+          "label": "Traictory（英文技术报道，引 README 原文）",
+          "url": "https://traictory.com/news/2026-11-25-anthropic-vp-neq-vnp-proof"
+        },
+        {
+          "label": "CIVL（英文报道：未经同行评审）",
+          "url": "https://civl.com/partners/an-unreviewed-claude-proof-claims-to-settle-how-hard-some-math-is-to-compute-0ab97500"
+        },
+        {
+          "label": "Clauday（英文，含两家发布的时间线）",
+          "url": "https://clauday.com/article/72d79a7f-135c-4a07-bc9f-f740419ff8e9"
+        }
+      ]
+    },
+    {
+      "title": "Axios：OpenAI、Anthropic 内部模型「强到不敢发」，Anthropic 股价跌破发行价",
+      "category": "AI",
+      "points": [
+        "Axios 11-24 引述两家公司超过 24 名知情人士：尚未公开的内部前沿模型在数学、科学、网络安全乃至 AI 研究上的进展远超已发布版本，许多一线员工认为它们「已无法安全地面向公众」。",
+        "内部正在讨论的选项包括：最强的模型不再公开发布，只做内部使用或受限的企业交付；部分研究人员主张在安全方法跟上之前暂停训练下一代。报道属媒体调查，两家公司没有公开确认细节。",
+        "同一天，Anthropic（Nasdaq: ANT）收跌 6.5% 至 81.91 美元，上周刚以 83 美元完成 IPO，今天首次跌破发行价；「新模型是 AI 股的命脉」成了抛售理由之一。",
+        "口径差异：国内（机器之心）标题更耸动，写成「模型强到不敢发」「绝对不能发布」；Axios 原文克制得多，落点在员工与管理层在对齐研究上的分歧，并强调「停训」目前只是讨论选项，不是决定。"
+      ],
+      "sources": [
+        {
+          "label": "香港经济日报（Axios 独家摘要）",
+          "url": "https://inews.hket.com/article/4230461/%E3%80%90OpenAI%EF%BD%9CAnthropic%E3%80%91%E6%96%B0%E4%B8%80%E4%BB%A3AI%E6%A8%A1%E5%9E%8B%E5%BC%B7%E5%A4%A7%E5%88%B0%E4%B8%8D%E6%95%A2%E5%85%AC%E9%96%8B%E3%80%80%E6%93%9A%E5%A0%B1%E5%B7%B2%E6%87%82%E6%AC%BA%E9%A8%99%E4%BA%BA%E9%A1%9E%E3%80%80%E5%85%A9%E5%B7%A8%E9%A0%AD%E5%85%A7%E9%83%A8%E7%A0%94%E5%81%9C%E6%AD%A2%E6%8E%A8%E5%87%BA%E6%96%B0%E6%A8%A1%E5%9E%8B"
+        },
+        {
+          "label": "机器之心（网易号转载）",
+          "url": "https://www.163.com/dy/article/LCIJAGUI05568W0A.html"
+        },
+        {
+          "label": "Singularity Kiwi（英文转述 Axios 独家）",
+          "url": "https://singularity.kiwi/openai-anthropic-staff-unsafe-release-axios-2026"
+        }
+      ]
+    },
+    {
+      "title": "英伟达复职行情只撑一天：费半跌 7.88%，存储芯片集体重挫",
+      "category": "AI",
+      "points": [
+        "11-24 美股：道指涨 0.85% 至 50018.70 点（重回 5 万点），标普 500 跌 0.50% 至 7201.09 点，纳指跌 1.48% 至 23733.54 点；费城半导体指数跌 7.88%，30 只成分股全绿，较 6 月高点已回撤近 40%。",
+        "个股：英伟达跌 5.86% 至 155.38 美元，回吐周一大涨 31% 的一部分；美光跌 10.97%、闪迪跌 11.13%、SK 海力士跌 9.90%、AMD 跌 8.86%、英特尔跌 8.15%。资金转向医疗（+2.88%）与必需消费（+1.73%），科技板块跌 2.77% 领跌。",
+        "亚洲时段方向相反：日经 225 涨 3.91%、韩国综合指数涨 6.32%，三星电子与 SK 海力士在首尔均涨逾 6%，与美股存储股走势背离。",
+        "口径差异：路透的写法是「黄仁勋回归只回答了『谁来带队』这一个问题」，重点放在 AI 投入能否兑现回报、12 月加息预期与 PCE 数据；国内财经号更集中在存储涨价、费半回撤幅度和「一日游」三个点上。"
+      ],
+      "sources": [
+        {
+          "label": "Reuters（Kontan 英文刊载）",
+          "url": "https://english.kontan.co.id/news/global-markets-us-stocks-slide-as-nvidia-rally-fizzles-out-d"
+        },
+        {
+          "label": "中新经纬（收盘数据）",
+          "url": "https://www.jwview.com/jingwei/html/11-25/698328.shtml"
+        }
+      ]
+    },
+    {
+      "title": "智谱发布 GLM-5.4：Loop Transformer 不加参数换深度，约 7500 亿参数",
+      "category": "AI",
+      "points": [
+        "智谱 11-23 晚发布新一代旗舰 GLM-5.4，首次采用 Loop Transformer：把 28 层共享权重的中间层跑两轮，在参数量基本不变的情况下加深推理；官方口径约 7500 亿参数，效果对标 2 万亿至 3 万亿参数级模型。",
+        "同时新增视觉理解，编程能力扩到视频制作、游戏开发、3D 建模与机械设计，配套的 zcode 升到 4.0。",
+        "高盛 11-24 维持智谱（02513.HK）「买入」、目标价 1,560 港元，认为 GLM-5.4 是约 4 倍规模下一代模型的试验场，后者预计 2026 年底前发布；海外评测者更关心「不加参数、靠循环加深度」这条路线能不能复现。",
+        "为什么值得看：在堆参数越来越贵的当下，这是一条用架构换深度的国产路线；你以后要不要本地跑模型、跑多大的模型，都会被这类「同参数更强」的进展影响。"
+      ],
+      "sources": [
+        {
+          "label": "腾讯新闻（GLM-5.4 技术与实测解读）",
+          "url": "https://news.qq.com/rain/a/20261125A0421J00"
+        },
+        {
+          "label": "智通财经（高盛研报，网易转载）",
+          "url": "https://www.163.com/dy/article/LCIF044305568W0A.html"
+        },
+        {
+          "label": "deniz.in（英文技术解读）",
+          "url": "https://deniz.in/z-ai-s-glm-5-4-loops-28-layers-twice-per-token-instead-of-adding-parameters"
+        }
+      ]
+    },
+    {
+      "title": "MIT Technology Review：美国数据中心自建 100 多座天然气电厂绕开电网排队",
+      "category": "AI",
+      "points": [
+        "MIT Technology Review 统计：截至 2026 年 10 月，美国数据中心开发商已提出 100 多座天然气发电厂，多为「表后」（behind-the-meter）自建，直接绕开最长可达十年的电网接入审批。",
+        "代价是排放上升，以及把发电与输电成本转嫁给其他电力用户；这正在变成数据中心选址和地方政治的新战场。",
+        "背景：美国电网过去几年从近乎零增长变成每年新增数吉瓦，AI 是主要推手。",
+        "为什么值得看：算力的瓶颈正从芯片转向电力和并网许可，这决定了未来两年模型训练放在哪、单位算力贵多少。"
+      ],
+      "sources": [
+        {
+          "label": "MIT Technology Review（Superpower Daily 转载）",
+          "url": "https://superpowerdaily.com/posts/us-data-center-developers-propose-more-than-100-gas-plants-mit-technology-review-finds"
+        },
+        {
+          "label": "GazeWire（引 MIT Technology Review）",
+          "url": "https://gazewire.com/energy-climate/oil-gas-petrochemicals/data-center-developers-pivot-to-private-natural-gas-power"
+        }
+      ]
+    },
+    {
+      "title": "伊朗要「逐日收紧」霍尔木兹封锁：第四艘油轮触雷，油价涨超 2%",
+      "category": "时事",
+      "points": [
+        "11-24，伊朗军队总司令哈塔米表示，在伊朗提出的七项条件落实前不会开放霍尔木兹海峡，并下令「逐日收紧」封锁；伊朗海军称两艘油轮当天凌晨关闭导航进入禁行区后触雷起火，革命卫队晚间称第四艘油轮又触雷。",
+        "英国海上贸易行动办公室（UKMTO）通报：三艘船 11-23 晚（UTC 20:25）向东通过海峡时被不明发射物击中，船只继续航行、无人失踪；22 日另有一艘散货船在阿联酋迪巴港外锚泊时被击中起火。",
+        "量级：10 月海峡及周边遇袭船舶 37 艘，创冲突以来月度新高；11 月前 22 天至少 22 起；11-12 至 11-18 一周仅 263 艘船通过，约为战前日均 135 艘的三分之一。",
+        "市场与口径：WTI 涨 2.35% 至 82.05 美元、布伦特涨 2.27% 至 91.40 美元；伊朗方面还称击落两架美军无人机，这一说法未获美方确认。"
+      ],
+      "sources": [
+        {
+          "label": "新华社（腾讯新闻转载）",
+          "url": "https://news.qq.com/rain/a/20261125A03OZZ00"
+        },
+        {
+          "label": "解放日报（遇袭次数与通行量数据）",
+          "url": "https://www.jfdaily.com/staticsg/res/html/journal/detail.html?date=2026-11-25&id=547568&page=08"
+        },
+        {
+          "label": "澳门日报（综合新华社、香港中通社）",
+          "url": "https://www.macaodaily.com/content/202611/25/c518970.html"
+        }
+      ]
+    },
+    {
+      "title": "赛诺菲 410 亿美元现金买下 Insmed，2023 年以来最大制药并购",
+      "category": "时事",
+      "points": [
+        "11-24，赛诺菲宣布以每股 175 美元现金收购美国生物制药公司 Insmed，总股权价值约 410 亿美元（376 亿欧元）：较消息曝光前 11-18 收盘溢价约 46%，较前一日收盘溢价 17.5%。",
+        "这是赛诺菲史上最大收购、法国最大现金交易、欧洲第四大；也是 2023 年以来制药业最大并购，预计 2027 年上半年完成，尚待 Insmed 股东与监管批准。",
+        "动机：Dupixent 贡献约四成营收、2031 年专利到期；Insmed 带来两款已上市呼吸系统药物和在研管线，用来补上专利悬崖前的缺口。",
+        "市场反应：赛诺菲收涨约 9%、Insmed 涨超 14%，医疗保健板块成为当天美股最强板块（+2.88%）。"
+      ],
+      "sources": [
+        {
+          "label": "新华财经",
+          "url": "https://m.cnfin.com/gs-lb//zixun/20261125/4499851_1.html"
+        },
+        {
+          "label": "Chosun English（引 Reuters）",
+          "url": "https://biz.chosun.com/en/en-science/2026/11/25/MWUTRD5MI5CGJKDTPSRWDFDBZY"
+        },
+        {
+          "label": "TrialSite News（英文）",
+          "url": "https://trialsitenews.com/p/trialsitenews/sanofis-41-billion-insmed-acquisition-reshapes-respiratory-medicine-blockbuster-growth-meets-pipeline-risk-0f3fc635"
+        }
+      ]
+    },
+    {
+      "title": "上海市委书记陈吉宁被查，通报只有一句话",
+      "category": "时事",
+      "points": [
+        "11-24，新华社发布一句话通报：中央政治局委员、上海市委书记陈吉宁涉嫌严重违纪违法，目前正接受中央纪委国家监委纪律审查和监察调查。",
+        "通报没有披露具体问题细节，也没有说明上海市委工作由谁主持。",
+        "为什么值得看：上海是金融、外资和科创政策最集中的城市，一把手变动会牵动地方产业与招商节奏，后续通报值得跟。"
+      ],
+      "sources": [
+        {
+          "label": "新华社",
+          "url": "https://www.news.cn/legal/20261124/378b13d41b634900bbe3b8e3de92958d/c.html"
+        },
+        {
+          "label": "中央纪委国家监委",
+          "url": "https://www.ccdi.gov.cn/toutiaon/202611/t20261124_524167.html"
+        }
+      ]
+    }
+  ]
+}
