@@ -47,7 +47,7 @@
   function sources(list) {
     if (!list || !list.length) return '';
     return '<p class="sources">' + list.map(function (s) {
-      return NoemaContent.safeLink(s.url)
+      return NoemaContent.safeLink(s.url) && new URL(s.url).pathname !== '/'
         ? '<a class="source-link" href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + '<span class="arrow">↗</span></a>'
         : '<span class="source-link is-plain">' + esc(s.label) + '</span>';
     }).join('') + '</p>';
@@ -201,7 +201,7 @@
       if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
         var day = items.filter(function (x) { return x.date === d; })[0];
         title.textContent = pretty(d) + ' ' + weekday(d);
-        meta.textContent = day ? '共 ' + (day.entries || []).length + ' 条 · ' + (day.window || '') : '这一天没有入库的日报。';
+        meta.textContent = day ? '共 ' + (day.entries || []).length + ' 条' + (day.window ? ' · ' + day.window : '') : '这一天没有入库的日报。';
         document.title = d + ' 日报 · Noema';
         body.innerHTML = dailyDetail(items, d);
       } else {

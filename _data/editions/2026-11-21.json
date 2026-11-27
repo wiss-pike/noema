@@ -13,12 +13,12 @@
       ],
       "sources": [
         {
-          "label": "中新经纬",
-          "url": "https://www.jwview.com"
+          "label": "Axios（AI 股回落）",
+          "url": "https://www.axios.com/2026/11/20/anthropic-ipo-nvidia-ai-tech-selloff"
         },
         {
-          "label": "The Straits",
-          "url": "https://www.straitstimes.com"
+          "label": "美联社（美股指数收盘）",
+          "url": "https://apnews.com/article/c10b797a17c2acf37924d834efebe135"
         }
       ]
     },
@@ -44,13 +44,17 @@
       "title": "METR 更新「最容易被误读的那张图」：能力还在指数上涨，判断力没有跟上",
       "category": "AI",
       "points": [
-        "11-20 发布「时间跨度」曲线 1.1 版，任务从 170 个扩到 228 个，首次加入「成功难以定义」的判断类任务。",
+        "METR 在 11 月 20 日发布最新能力评估，增加了耗时更长和更依赖判断的任务。此前的 Time Horizon 1.1 版已将任务从 170 个扩到 228 个。",
         "结果很直接：没有一个模型设计的评测被 METR 员工认为可用，哲学论证也没达到人类水平，Claude Opus 5.5 只是勉强过线。软件工程任务的时间跨度自 2021 年起约每 7 个月翻一倍。可验证的题正在被自动化，难被验证的判断力更值钱。"
       ],
       "sources": [
         {
-          "label": "MIT Technology",
-          "url": "https://www.technologyreview.com"
+          "label": "METR 季度评估原文",
+          "url": "https://metr.org/blog/2026-11-20-q4-2026-capability-update/"
+        },
+        {
+          "label": "METR Time Horizon 1.1",
+          "url": "https://evals.alignment.org/blog/2026-01-29-time-horizon-1-1/"
         }
       ]
     },
@@ -77,8 +81,8 @@
       ],
       "sources": [
         {
-          "label": "澎湃新闻",
-          "url": "https://www.thepaper.cn"
+          "label": "中国科学院空天信息创新研究院",
+          "url": "https://www.aircas.cas.cn/dtxw/kydt/202611/t20261117_8309873.html"
         }
       ]
     },

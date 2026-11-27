@@ -2,14 +2,15 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
-import handler, { readFeed, makeEdition } from './worker.mjs';
+import handler, { checkedArticle, readFeed, makeEdition } from './worker.mjs';
 import { onRequestGet } from './pages/functions/api/daily.js';
 import { feeds } from './sources.mjs';
 
 const now = Date.parse('2026-11-23T00:00:00Z');
 const xmlEntry = (link, date) => `<item><title>AI news &amp; research</title><link>${link}</link><pubDate>${new Date(date).toUTCString()}</pubDate><description><![CDATA[<b>Source excerpt</b>]]></description></item>`;
 const feed = (...entries) => `<rss><channel>${entries.join('')}</channel></rss>`;
-const draft = id => ({ id, title: '研究简报', points: ['公开研究的主要更新。'], url: 'https://invalid.example' });
+const draft = { title: '研究简报', points: ['公开研究的主要更新。'], evidence: 'AI news & research',
+  url: 'https://invalid.example' };
 
 test('RSS keeps the last 24 hours, cleans text and strips tracking links', () => {
   const results = readFeed(feed(
@@ -32,15 +33,34 @@ test('Atom updated dates and RSS publication dates remain supported', () => {
 
 test('editorial quotas are enforced and links only come from candidate feeds', () => {
   const kinds = ['domestic', 'domestic', 'domestic', 'foreign', 'foreign', 'foreign', 'foreign', 'primary', 'primary'];
-  const candidates = kinds.map((kind, index) => ({ kind, category: index < 2 ? '科技' : 'AI', source: kind, link: 'https://example.org/' + index }));
-  const response = { response: { entries: [draft(99), ...candidates.map((_, i) => draft(i + 1)), draft(4)] } };
-  const edition = makeEdition(response, candidates, '2026-11-23');
+  const candidates = kinds.map((kind, index) => ({ kind, category: index < 2 ? '科技' : 'AI', source: kind,
+    link: 'https://example.org/' + index, title: 'AI news & research' }));
+  const drafts = candidates.map(candidate => ({ candidate, item: draft }));
+  const edition = makeEdition(drafts, '2026-11-23');
   assert.equal(edition.entries.length, 8);
   const sourceTypes = edition.entries.map(item => item.sources[0].label);
   assert.equal(sourceTypes.filter(item => item === 'foreign').length, 4);
   assert.equal(sourceTypes.filter(item => item !== 'domestic').length, 6);
   assert.ok(edition.entries.every(item => item.sources[0].url.startsWith('https://example.org/')));
-  assert.throws(() => makeEdition({ response: { entries: [draft(99)] } }, candidates, '2026-11-23'));
+  assert.throws(() => makeEdition([{ candidate: candidates[3], item: { ...draft, evidence: 'An unrelated article' } }],
+    '2026-11-23'), /No verified selection/);
+});
+
+test('article checks reject homepages, another article, and a verification challenge', async t => {
+  const candidate = { source: 'BBC News', link: 'https://www.bbc.co.uk/news/articles/c820q9wgrpyyo' };
+  let destination = 'https://www.bbc.com/';
+  let markup = '<title>Original article | BBC News</title>';
+  const fetch = t.mock.method(globalThis, 'fetch', async url => url === candidate.link ?
+    new Response(null, { status: 302, headers: { Location: destination } }) :
+    new Response(markup, { headers: { 'Content-Type': 'text/html' } }));
+  assert.equal(await checkedArticle(candidate), null);
+  destination = 'https://www.bbc.com/news/articles/someotherreport';
+  assert.equal(await checkedArticle(candidate), null);
+  assert.equal(fetch.mock.callCount(), 2);
+  destination = 'https://www.bbc.com/news/articles/c820q9wgrpyyo';
+  assert.equal((await checkedArticle(candidate)).link, destination);
+  markup = '<title>Client Challenge</title>';
+  assert.equal(await checkedArticle(candidate), null);
 });
 
 test('the scheduled archive stores Simplified Chinese once, and Pages reads the published edition', async t => {
@@ -59,21 +79,29 @@ test('the scheduled archive stores Simplified Chinese once, and Pages reads the 
       return command();
     },
   }, AI: {
-    run: t.mock.fn(async () => ({ response: { entries: feeds.map((_, i) => ({
-      ...draft(i + 1), title: '美國州檢察總長試圖阻止 Character.AI 出售用戶聊天數據',
+    run: t.mock.fn(async (_, input) => {
+      const payload = JSON.parse(input.messages[1].content);
+      if (Array.isArray(payload)) return { response: { ids: [1] } };
+      assert.deepEqual(Object.keys(payload), ['title', 'excerpt']);
+      return { response: {
+      ...draft, title: '美國州檢察總長試圖阻止 Character.AI 出售用戶聊天數據',
       points: ['「上下文縮放」旨在減少因用戶狀態和工具追蹤資訊缺失而導致的問題。'],
-    })) } })),
+      } };
+    }),
   } };
-  t.mock.method(globalThis, 'fetch', async url =>
-    new Response(feed(xmlEntry(new URL('/story', url).href, now - 1000)))
-  );
+  const url = 'https://www.theverge.com/policy/1042620/character-ai-sale-state-ags-block-selling-users-chats';
+  t.mock.method(globalThis, 'fetch', async input => {
+    if (input === url) return new Response('<title>AI news &amp; research</title>', { headers: { 'Content-Type': 'text/html' } });
+    const match = feeds.find(source => source.url === input);
+    return new Response(match?.name === 'The Verge' ? feed(xmlEntry(url, now - 1000)) : feed());
+  });
   const result = {};
   const ctx = { waitUntil(promise) { result.job = promise; } };
   handler.scheduled({ scheduledTime: now }, env, ctx);
   await result.job;
   handler.scheduled({ scheduledTime: now }, env, ctx);
   await result.job;
-  assert.equal(env.AI.run.mock.callCount(), 1);
+  assert.equal(env.AI.run.mock.callCount(), 2);
   const request = new Request('https://noema-wiss.pages.dev/api/daily');
   const published = await onRequestGet({ request, env: { BRIEFING: { fetch: req => handler.fetch(req, env) } } });
   const body = await published.json();
@@ -81,7 +109,7 @@ test('the scheduled archive stores Simplified Chinese once, and Pages reads the 
   assert.equal(body.items[0].date, '2026-11-23');
   assert.equal(body.items[0].entries[0].title, '美国州检察总长试图阻止 Character.AI 出售用户聊天数据');
   assert.equal(body.items[0].entries[0].points[0], '「上下文缩放」旨在减少因用户状态和工具追踪资讯缺失而导致的问题。');
-  assert.match(body.items[0].entries[0].sources[0].url, /^https:/);
+  assert.equal(body.items[0].entries[0].sources[0].url, url);
   const post = await handler.fetch(new Request(request, { method: 'POST' }), env);
   assert.equal(post.status, 405);
 });

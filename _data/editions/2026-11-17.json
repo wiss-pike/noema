@@ -27,13 +27,13 @@
       ],
       "sources": [
         {
-          "label": "AI 日报（2026-11-17）",
-          "url": "https://damodev.csdn.net/6afbb7a940858c2d881bf0c7.html"
+          "label": "原文链接待核实",
+          "url": ""
         }
       ]
     },
     {
-      "title": "英伟达 Vera Rubin 平台 MLPerf 首秀，并发布 Rubin HP",
+      "title": "英伟达 Vera Rubin 平台 MLPerf 首秀，并发布 Rubin HPC",
       "category": "AI",
       "points": [
         "英伟达 Vera Rubin 平台 MLPerf 首秀，并发布 Rubin HPC。",
@@ -42,8 +42,12 @@
       ],
       "sources": [
         {
-          "label": "AI 日报（2026-11-17）",
-          "url": "https://damodev.csdn.net/6afbb7a940858c2d881bf0c7.html"
+          "label": "英伟达 MLPerf 测试公告",
+          "url": "https://blogs.nvidia.com/blog/mlperf-training-endpoints-vera-rubin/"
+        },
+        {
+          "label": "英伟达 Rubin HPC 发布公告",
+          "url": "https://blogs.nvidia.com/blog/ian-buck-sc26/"
         }
       ]
     },
@@ -56,12 +60,8 @@
       ],
       "sources": [
         {
-          "label": "AI 日报（2026-11-17）",
-          "url": "https://damodev.csdn.net/6afbb7a940858c2d881bf0c7.html"
-        },
-        {
-          "label": "-news-35",
-          "url": "https://www.eyssen.ai/blog/latest-ai"
+          "label": "原文链接待核实",
+          "url": ""
         }
       ]
     },
