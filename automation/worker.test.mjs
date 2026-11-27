@@ -43,7 +43,7 @@ test('editorial quotas are enforced and links only come from candidate feeds', (
   assert.throws(() => makeEdition({ response: { entries: [draft(99)] } }, candidates, '2026-11-23'));
 });
 
-test('the scheduled archive persists once, and Pages reads the published edition', async t => {
+test('the scheduled archive stores Simplified Chinese once, and Pages reads the published edition', async t => {
   const database = new DatabaseSync(':memory:');
   t.after(() => database.close());
   database.exec(readFileSync(new URL('./migrations/0001_editions.sql', import.meta.url), 'utf8'));
@@ -59,7 +59,10 @@ test('the scheduled archive persists once, and Pages reads the published edition
       return command();
     },
   }, AI: {
-    run: t.mock.fn(async () => ({ response: { entries: feeds.map((_, i) => draft(i + 1)) } })),
+    run: t.mock.fn(async () => ({ response: { entries: feeds.map((_, i) => ({
+      ...draft(i + 1), title: '美國州檢察總長試圖阻止 Character.AI 出售用戶聊天數據',
+      points: ['「上下文縮放」旨在減少因用戶狀態和工具追蹤資訊缺失而導致的問題。'],
+    })) } })),
   } };
   t.mock.method(globalThis, 'fetch', async url =>
     new Response(feed(xmlEntry(new URL('/story', url).href, now - 1000)))
@@ -76,7 +79,9 @@ test('the scheduled archive persists once, and Pages reads the published edition
   const body = await published.json();
   assert.equal(body.items.length, 1);
   assert.equal(body.items[0].date, '2026-11-23');
-  assert.ok(body.items[0].entries.length > 0);
+  assert.equal(body.items[0].entries[0].title, '美国州检察总长试图阻止 Character.AI 出售用户聊天数据');
+  assert.equal(body.items[0].entries[0].points[0], '「上下文缩放」旨在减少因用户状态和工具追踪资讯缺失而导致的问题。');
+  assert.match(body.items[0].entries[0].sources[0].url, /^https:/);
   const post = await handler.fetch(new Request(request, { method: 'POST' }), env);
   assert.equal(post.status, 405);
 });
