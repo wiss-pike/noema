@@ -1,7 +1,18 @@
 /* ==========================================================================
    Noema — 论文精读归档
-   编辑部式极简：纸色底、衬线标题、发丝线、大留白；无外部字体、无构建步骤。
+   编辑部式极简：纸色底、衬线标题、发丝线、大留白。
    ========================================================================== */
+
+/* 本站托管中文标题字体。西文仍使用下方的系统衬线字体。 */
+@font-face {
+  font-family: "Noema CJK Serif";
+  src: url("../fonts/noema-cjk-serif.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  unicode-range: U+2E80-2FFF, U+3000-303F, U+3100-312F, U+31A0-31BF,
+    U+3400-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF, U+20000-3134F;
+}
 
 :root {
   /* 语义色板：Swiss 中性底 + 学术藏青 + 引文金 */
@@ -33,11 +44,12 @@
   --s7: 64px;
   --s8: 96px;
 
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
-    Georgia, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC",
-    "Source Han Serif CN", "SimSun", serif;
+  --serif: "Noema CJK Serif", "Iowan Old Style", "Palatino Linotype", Palatino,
+    "Book Antiqua", Georgia, "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC",
+    "Source Han Serif CN", "STSong", "SimSun", "Microsoft YaHei", serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-    "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue",
+    "Hiragino Sans GB", "Noto Sans CJK SC", "Noto Sans SC", "Source Han Sans SC",
+    "Microsoft YaHei", "DengXian", "Helvetica Neue",
     Arial, sans-serif;
 
   --shell: 1180px;
@@ -1032,7 +1044,7 @@ button { font: inherit; color: inherit; }
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(2.6rem, 6.5vw, 4.4rem);
-  line-height: 1.05;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
